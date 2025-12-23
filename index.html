@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gaming Agent Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 2em;
+            color: #764ba2;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #667eea;
+            margin: 20px 0 15px 0;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            line-height: 1.8;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        strong {
+            color: #764ba2;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            text-align: center;
+            margin-top: -10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .highlight {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide">
+            <h1>🎮 AI Gaming Agent Portfolio</h1>
+            <p class="subtitle">Unity + LLM Intelligent NPC Project</p>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <h2>1. 프로젝트 개요</h2>
+            <p class="highlight">"게임 속 NPC가 살아있는 지능을 갖는다면?"</p>
+            <ul>
+                <li><strong>Unity Engine</strong> + <strong>Latest LLM</strong> (GPT-4 / Gemini)</li>
+                <li><strong>목표</strong>: 정해진 대사가 아닌, <strong>페르소나</strong>, <strong>외부 데이터</strong>, <strong>논리적 추론</strong>을 갖춘 Intelligent Gaming Agent 구현</li>
+                <li><strong>핵심 가치</strong>: 몰입감 있는 상호작용 경험 제공</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Intent -->
+        <div class="slide">
+            <h2>2. 기획 의도</h2>
+            <ol>
+                <li><strong>Gaming Agent 역량 입증</strong>
+                    <ul><li>단순 스크립트 탈피 → 능동적 상호작용 NPC</li></ul>
+                </li>
+                <li><strong>데이터 처리 기술 접목</strong>
+                    <ul><li>텍스트 마이닝, 감성 분석, RAG 활용</li></ul>
+                </li>
+                <li><strong>실무 적용 가능성 검증</strong>
+                    <ul><li>학습한 기술의 실전 활용 테스트</li></ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Slide 4: Key Features - Phase 1 -->
+        <div class="slide">
+            <h2>3. 핵심 기능 - Phase 1</h2>
+            <h3>세이노의 가르침 페르소나 NPC</h3>
+            <ul>
+                <li><strong>특징</strong>: 독설적이고 확고한 가치관을 지닌 상점 주인 NPC</li>
+                <li><strong>기술</strong>: 
+                    <ul>
+                        <li>OpenAI / Google Gemini API 연동</li>
+                        <li>System Prompt Engineering을 통한 페르소나 주입</li>
+                        <li>Mock AI로 API 없이도 작동</li>
+                    </ul>
+                </li>
+                <li><strong>UX</strong>: 
+                    <ul>
+                        <li>플레이어의 가격 흥정에 대해 NPC가 자신의 철학에 따라 반응</li>
+                        <li>구매/판매 시스템</li>
+                        <li>인벤토리 관리</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Phase 2 -->
+        <div class="slide">
+            <h2>3. 핵심 기능 - Phase 2</h2>
+            <h3>LLM 기반 실시간 경제 시뮬레이션</h3>
+            <ul>
+                <li><strong>기능</strong>: 실제 경제 뉴스를 분석하여 게임 내 가상 자산의 시세를 변동</li>
+                <li><strong>기술</strong>:
+                    <ul>
+                        <li>Python 크롤러</li>
+                        <li>감성 분석 (Sentiment Analysis)</li>
+                        <li>Unity-Python 데이터 연동</li>
+                    </ul>
+                </li>
+                <li><strong>UX</strong>: "지금 나스닥이 하락세라 포션 가격이 올랐네?" - 현실 데이터 기반의 살아있는 경제 시스템</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Phase 3 -->
+        <div class="slide">
+            <h2>3. 핵심 기능 - Phase 3</h2>
+            <h3>"거짓말 탐지기" 추리 에이전트</h3>
+            <ul>
+                <li><strong>기능</strong>: 범인의 알리바이와 증거를 토대로 진실을 밝혀내는 추리 게임</li>
+                <li><strong>기술</strong>:
+                    <ul>
+                        <li>RAG (검색 증강 생성)를 활용한 지식 제한</li>
+                        <li>Deception Prompting (거짓말 유도)</li>
+                    </ul>
+                </li>
+                <li><strong>UX</strong>: 교묘하게 거짓말하는 AI를 논리로 제압하는 추리 경험</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Terminology -->
+        <div class="slide">
+            <h2>4. 주요 용어 설명</h2>
+            <table>
+                <tr>
+                    <th>용어</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><strong>LLM</strong></td>
+                    <td>Large Language Model - 대규모 언어 모델 (예: GPT-4, Gemini)</td>
+                </tr>
+                <tr>
+                    <td><strong>RAG</strong></td>
+                    <td>Retrieval-Augmented Generation - 검색 증강 생성, 특정 데이터로 AI 응답 제한</td>
+                </tr>
+                <tr>
+                    <td><strong>Sentiment Analysis</strong></td>
+                    <td>감성 분석 - 텍스트에서 긍정/부정 감정을 파악하는 기술</td>
+                </tr>
+                <tr>
+                    <td><strong>System Prompting</strong></td>
+                    <td>AI에게 역할과 성격을 부여하는 초기 지시문</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 8: Tech Stack -->
+        <div class="slide">
+            <h2>5. 기술 스택</h2>
+            <table>
+                <tr>
+                    <th>분야</th>
+                    <th>기술</th>
+                </tr>
+                <tr>
+                    <td><strong>Game Engine</strong></td>
+                    <td>Unity 6 (C#)</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Model</strong></td>
+                    <td>OpenAI GPT-4 / Google Gemini / Mock AI</td>
+                </tr>
+                <tr>
+                    <td><strong>Backend</strong></td>
+                    <td>Python (Flask)</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Processing</strong></td>
+                    <td>BeautifulSoup, Pandas, Scikit-learn</td>
+                </tr>
+                <tr>
+                    <td><strong>Version Control</strong></td>
+                    <td>Git / GitHub</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 9: Roadmap -->
+        <div class="slide">
+            <h2>6. 개발 로드맵</h2>
+            <h3>📅 Phase 1 (완료)</h3>
+            <ul>
+                <li>✅ 세이노 페르소나 NPC 구현</li>
+                <li>✅ 상점 시스템 (구매/판매/인벤토리)</li>
+                <li>✅ Mock/Gemini/OpenAI 멀티 백엔드</li>
+            </ul>
+            
+            <h3>📅 Phase 2 (진행 중)</h3>
+            <ul>
+                <li>📋 경제 뉴스 크롤러 개발</li>
+                <li>📋 감성 분석 모듈 구현</li>
+                <li>📋 Unity 경제 시스템 연동</li>
+            </ul>
+            
+            <h3>📅 Phase 3 (예정)</h3>
+            <ul>
+                <li>🔜 탐정 게임 RAG 파이프라인</li>
+                <li>🔜 거짓말 탐지 로직</li>
+                <li>🔜 Unity UI 구현</li>
+            </ul>
+        </div>
+
+        <!-- Slide 10: Expected Effects -->
+        <div class="slide">
+            <h2>7. 기대 효과</h2>
+            <ol>
+                <li><strong>기술 역량 향상</strong>
+                    <ul><li>LLM API 활용, 데이터 처리, Unity 개발 경험</li></ul>
+                </li>
+                <li><strong>포트폴리오 차별화</strong>
+                    <ul><li>단순 클론 코딩이 아닌 창의적 기술 접목</li></ul>
+                </li>
+                <li><strong>실무 적용 가능성</strong>
+                    <ul><li>게임 산업에서 실제로 활용 가능한 기술 검증</li></ul>
+                </li>
+                <li><strong>확장 가능성</strong>
+                    <ul><li>VR/AR, 메타버스 등 다양한 분야로 확장 가능</li></ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Slide 11: Demo -->
+        <div class="slide center">
+            <h2>8. Demo & GitHub</h2>
+            <p style="font-size: 1.5em; margin: 40px 0;">
+                <strong>🔗 GitHub Repository:</strong><br>
+                <a href="https://github.com/chlsuun/test" target="_blank" style="color: #667eea;">
+                    github.com/chlsuun/test
+                </a>
+            </p>
+            <p style="font-size: 1.3em; color: #666;">
+                Console Demo 실행 가능<br>
+                Mock Mode로 API 없이도 체험 가능
+            </p>
+        </div>
+
+        <!-- Slide 12: Thank You -->
+        <div class="slide center">
+            <h1 style="font-size: 4em; margin-top: 100px;">감사합니다! 🙏</h1>
+            <p style="font-size:  1.5em; margin-top: 40px; color: #666;">
+                질문이 있으시면 편하게 해주세요
+            </p>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>🎮 AI Gaming Agent Portfolio | Made with ❤️</p>
+    </div>
+
+</body>
+</html>

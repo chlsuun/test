@@ -1,0 +1,57 @@
+/* Character image display additions */
+.character-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 20px;
+    filter: blur(2px) opacity(0.5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    transition: all 0.5s ease;
+}
+
+/* Override character-image size for images */
+.character-image {
+    width: 500px !important;
+    height: 500px !important;
+}
+
+/* Angry state for images */
+.character-image.angry .character-img {
+    filter: blur(1px) opacity(0.6) saturate(1.5) contrast(1.2);
+    animation: angryShake 0.5s ease-in-out;
+}
+
+/* Pleased state for images */
+.character-image.pleased .character-img {
+    filter: blur(1px) opacity(0.6) brightness(1.1);
+    animation: pleasedGlow 2s ease-in-out infinite;
+}
+
+/* Updated animations for images */
+@keyframes angryShake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-3deg) scale(1.05);
+    }
+
+    75% {
+        transform: rotate(3deg) scale(1.05);
+    }
+}
+
+@keyframes pleasedGlow {
+
+    0%,
+    100% {
+        filter: blur(1px) opacity(0.6) brightness(1.1);
+    }
+
+    50% {
+        filter: blur(1px) opacity(0.7) brightness(1.2);
+    }
+}

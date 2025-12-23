@@ -15,15 +15,15 @@
     height: 500px !important;
 }
 
-/* Angry state for images */
+/* Angry state for images - MORE VISIBLE */
 .character-image.angry .character-img {
-    filter: blur(1px) opacity(0.6) saturate(1.5) contrast(1.2);
+    filter: blur(0.5px) opacity(0.85) saturate(1.5) contrast(1.2) brightness(1.1);
     animation: angryShake 0.5s ease-in-out;
 }
 
-/* Pleased state for images */
+/* Pleased state for images - MORE VISIBLE */
 .character-image.pleased .character-img {
-    filter: blur(1px) opacity(0.6) brightness(1.1);
+    filter: blur(0.5px) opacity(0.85) brightness(1.2);
     animation: pleasedGlow 2s ease-in-out infinite;
 }
 

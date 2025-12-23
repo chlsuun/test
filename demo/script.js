@@ -133,89 +133,168 @@ function sendMessage() {
 function processMessage(message) {
     gameState.conversationCount++;
     const lowerMsg = message.toLowerCase();
+    const cleanMsg = message.replace(/\s/g, '').toLowerCase();
 
-    // 목록 보기
-    if (lowerMsg.includes('목록') || lowerMsg.includes('리스트')) {
+    // 목록 보기 - 확장된 키워드
+    if (lowerMsg.includes('목록') || lowerMsg.includes('리스트') || lowerMsg.includes('상품') ||
+        lowerMsg.includes('뭐파') || lowerMsg.includes('뭐있') ||
+        lowerMsg.includes('물건') || lowerMsg.includes('아이템')) {
         showShopList();
         updateSaynoEmotion('neutral');
         return "물건들이다. '할인 요청'을 눌러서 입씨름해봐. 쉽진 않을 거야.";
     }
 
-    // 인벤토리  
-    if (lowerMsg.includes('인벤토리') || lowerMsg.includes('가방')) {
+    // 인벤토리 - 확장
+    if (lowerMsg.includes('인벤토리') || lowerMsg.includes('가방') || lowerMsg.includes('소지품') ||
+        lowerMsg.includes('내꺼') || lowerMsg.includes('산거')) {
         showInventory();
         return "네 소지품이다. 팔 거 있으면 팔아.";
     }
 
-    // 목표 확인
-    if (lowerMsg.includes('목표')) {
+    // 목표 확인 - 확장
+    if (lowerMsg.includes('목표') || (lowerMsg.includes('얼마') && (lowerMsg.includes('모') || lowerMsg.includes('필요')))) {
         const currentGoal = goals[gameState.goalLevel];
-        return `현재 목표: ${currentGoal.title} (${currentGoal.gold}G). 지금 ${gameState.gold}G.`;
+        const remaining = currentGoal.gold - gameState.gold;
+        return `현재 목표: ${currentGoal.title} (${currentGoal.gold}G). 지금 ${gameState.gold}G, ${remaining}G 더 필요해.`;
     }
 
-    // 전설의 검 관련
-    if (lowerMsg.includes('전설')) {
+    // 소지금 확인
+    if ((lowerMsg.includes('소지금') || lowerMsg.includes('내돈') || (lowerMsg.includes('얼마') && lowerMsg.includes('있'))) &&
+        !lowerMsg.includes('목표')) {
+        return `${gameState.gold}G 있다. 목표까지 ${goals[gameState.goalLevel].gold - gameState.gold}G 남았어.`;
+    }
+
+    // 전설의 검
+    if (lowerMsg.includes('전설') || cleanMsg.includes('전설의검')) {
         if (gameState.goalLevel !== 'legendary_sword') {
             updateSaynoEmotion('neutral');
-            return "전설의 검? 아직 일러. 먼저 실력부터 증명해.";
+            return "전설의 검? 허, 아직 일러. 먼저 실력부터 증명해.";
         }
     }
 
-    // 날씨 대화
-    if (lowerMsg.includes('날씨') || lowerMsg.includes('weather')) {
+    // 도움말
+    if (lowerMsg.includes('도움') || lowerMsg.includes('어떻게') || lowerMsg.includes('하는법')) {
+        return "간단하다. 1) 목록 보기 2) 할인 요청으로 싸게 사기 3) 비싸게 팔기 4) 돈 모으기.";
+    }
+
+    // 나쁜말
+    if (lowerMsg.includes('짜증') || lowerMsg.includes('싫어') || lowerMsg.includes('나빠') ||
+        lowerMsg.includes('별로') || lowerMsg.includes('바보')) {
+        updateSaynoEmotion('angry');
+        return "무례한 놈. 썩 꺼져라.";
+    }
+
+    // 칭찬
+    if (lowerMsg.includes('멋져') || lowerMsg.includes('대단') || lowerMsg.includes('존경') ||
+        lowerMsg.includes('최고') || lowerMsg.includes('좋아')) {
+        updateSaynoEmotion('neutral');
+        return "아부는 소용없어. 장사는 실력이지.";
+    }
+
+    // 감사
+    if (lowerMsg.includes('감사') || lowerMsg.includes('고마')) {
+        updateSaynoEmotion('neutral');
+        return "감사는 돈이 안 돼. 다음엔 더 벌어와.";
+    }
+
+    // 날씨
+    if (lowerMsg.includes('날씨') || lowerMsg.includes('비') || lowerMsg.includes('덥') || lowerMsg.includes('추워')) {
         updateSaynoEmotion('neutral');
         return getRandomFrom(mockResponses.smallTalk.weather);
     }
 
-    // 인생 조언
-    if (lowerMsg.includes('조언') || lowerMsg.includes('가르침') || lowerMsg.includes('인생')) {
+    // 조언/가르침
+    if (lowerMsg.includes('조언') || lowerMsg.includes('가르침') || lowerMsg.includes('인생') ||
+        lowerMsg.includes('지혜') || lowerMsg.includes('비법') || lowerMsg.includes('성공')) {
         updateSaynoEmotion('pleased');
         return getRandomFrom(mockResponses.smallTalk.wisdom);
     }
 
-    // 장사 얘기
-    if (lowerMsg.includes('장사') || lowerMsg.includes('사업')) {
+    // 장사
+    if (lowerMsg.includes('장사') || lowerMsg.includes('사업') || lowerMsg.includes('돈버')) {
         updateSaynoEmotion('neutral');
         return getRandomFrom(mockResponses.smallTalk.business);
     }
 
-    // 칭찬
-    if (lowerMsg.includes('멋져') || lowerMsg.includes('대단') || lowerMsg.includes('존경')) {
-        updateSaynoEmotion('neutral');
-        return getRandomFrom(mockResponses.compliment);
-    }
-
-    // 욕/무례
-    if (lowerMsg.includes('짜증') || lowerMsg.includes('싫어') || lowerMsg.includes('나빠')) {
-        updateSaynoEmotion('angry');
-        return getRandomFrom(mockResponses.insult);
-    }
-
-    // 작별 인사
-    if (lowerMsg.includes('안녕') || lowerMsg.includes('bye') || lowerMsg.includes('나가')) {
-        updateSaynoEmotion('neutral');
-        return getRandomFrom(mockResponses.goodbye);
-    }
-
     // 판매
-    if (lowerMsg.includes('판매') || lowerMsg.includes('팔')) {
+    if (lowerMsg.includes('판매') || lowerMsg.includes('팔게') || lowerMsg.includes('팔아') ||
+        (lowerMsg.includes('팔') && !lowerMsg.includes('뭐팔'))) {
         const itemNum = findItemNumber(message);
         if (itemNum && gameState.inventory[itemNum]) {
             return sellItem(itemNum);
         }
-        return "뭘 팔겠다는 거야?";
+
+        // 이름으로 찾기
+        for (const [num, item] of Object.entries(shopItems)) {
+            if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
+                item.keywords.some(kw => cleanMsg.includes(kw))) {
+                if (gameState.inventory[num] && gameState.inventory[num] > 0) {
+                    return sellItem(num);
+                }
+                return "그걸 가지고 있지도 않잖아.";
+            }
+        }
+        return "뭘 팔겠다는 거야? 명확하게 말해.";
+    }
+
+    // 구매
+    const purchaseWords = ['구매', '살게', '사고', '주세요', '줘', 'buy', '구입'];
+    if (purchaseWords.some(w => lowerMsg.includes(w))) {
+        const itemNum = findItemNumber(message);
+        if (itemNum) {
+            updateSaynoEmotion('neutral');
+            return `${shopItems[itemNum].name}? 할인 받고 싶으면 '할인 요청' 버튼 눌러.`;
+        }
+
+        // 이름으로
+        for (const [num, item] of Object.entries(shopItems)) {
+            if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
+                item.keywords.some(kw => cleanMsg.includes(kw))) {
+                return `${item.name}? 목록에서 '할인 요청' 눌러봐.`;
+            }
+        }
+        return "뭘 사겠다는 거야? '목록' 쳐서 보고 말해.";
+    }
+
+    // 가격
+    if (lowerMsg.includes('가격') || lowerMsg.includes('얼마')) {
+        for (const [num, item] of Object.entries(shopItems)) {
+            if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
+                item.keywords.some(kw => cleanMsg.includes(kw))) {
+                const sellPrice = Math.floor(item.price * 0.7);
+                return `${item.name}? 구매는 ${item.price}G, 판매는 ${sellPrice}G.`;
+            }
+        }
+        return "'목록' 쳐서 봐. 다 있어.";
+    }
+
+    // 작별
+    if ((lowerMsg.includes('안녕') && lowerMsg.includes('잘')) || lowerMsg.includes('bye') || lowerMsg.includes('그만')) {
+        updateSaynoEmotion('neutral');
+        return getRandomFrom(mockResponses.goodbye);
     }
 
     // 인사
-    if (lowerMsg.includes('안녕') || lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+    if (lowerMsg.includes('안녕') || lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('반가')) {
         const emotion = gameState.totalBuys > 3 ? 'pleased' : 'neutral';
         updateSaynoEmotion(emotion);
         return getRandomFrom(mockResponses.greeting[emotion]);
     }
 
-    // 기본 응답
+    // 자기소개
+    if (lowerMsg.includes('누구') || lowerMsg.includes('이름')) {
+        updateSaynoEmotion('neutral');
+        return "나? 세이노다. 이 상점 주인. 쓸데없는 질문 말고 장사나 해.";
+    }
+
+    // 기본
     updateSaynoEmotion('neutral');
-    return "...무슨 말이야? 명확하게 얘기해.";
+    const defaults = [
+        "...무슨 말이야? 명확하게 얘기해.",
+        "이해가 안 되는데. '목록', '인벤토리', '조언' 같은 말 해봐.",
+        "장사할 거야 말 거야? 확실히 해."
+    ];
+    return getRandomFrom(defaults);
 }
 
 function updateSaynoEmotion(emotion) {

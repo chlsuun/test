@@ -10,7 +10,16 @@ const gameState = {
     negotiationSuccesses: 0,
     totalProfit: 0,
     currentNegotiatingItem: null,
-    saynoEmotion: 'neutral' // neutral, angry, pleased
+    saynoEmotion: 'neutral',
+    // 증강 시스템
+    augmentations: [],
+    sellNegotiationBonus: 0,  // 판매 협상 성공률 보너스
+    buyNegotiationBonus: 0,   // 구매 협상 성공률 보너스
+    sellPriceBonus: 0,        // 판매 가격 보너스 %
+    buyDiscountBonus: 0,      // 구매 할인 보너스 %
+    baseSellPrice: 0.70,      // 기본 판매 가격 (70%)
+    negotiationPenaltyTurns: 0, // 협상 패널티 남은 턴
+    leveledUp: false
 };
 
 // Goals - 최종 목표: 전설의 검 싸게 구매!
@@ -532,7 +541,7 @@ function renderShopItems() {
             <div class="item-desc">${item.desc}</div>
             <div class="item-actions">
                 <button class="item-btn buy-btn" onclick="showNegotiationModal('${num}')">할인 요청</button>
-                <button class="item-btn sell-btn" onclick="quickSell('${num}')" ${!hasItem ? 'disabled' : ''}>판매</button>
+                <button class="item-btn sell-btn" onclick="showSellNegotiationModal('${num}')" ${!hasItem ? 'disabled' : ''}>판매 협상</button>
             </div>
         `;
         shopItemsContainer.appendChild(itemDiv);

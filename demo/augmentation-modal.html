@@ -1,0 +1,102 @@
+<!-- Augmentation Modal -->
+<div class="modal" id="augmentation-modal">
+    <div class="modal-content augmentation-content">
+        <h2>🎉 레벨업!</h2>
+        <p class="level-up-message" id="level-up-message"></p>
+        <p class="modal-desc">증강을 선택하세요 (1개만 선택 가능)</p>
+        <div class="augmentation-choices" id="augmentation-choices">
+            <!-- Augmentation cards will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<style>
+    .augmentation-content {
+        max-width: 700px;
+    }
+
+    .level-up-message {
+        text-align: center;
+        font-size: 1.2em;
+        color: #ffd700;
+        margin: 15px 0;
+    }
+
+    .augmentation-choices {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .aug-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .aug-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--primary);
+        transform: translateY(-5px);
+    }
+
+    .aug-card.personality {
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .aug-card.gold {
+        border-color: rgba(255, 215, 0, 0.5);
+    }
+
+    .aug-card.trading {
+        border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .aug-card.random {
+        border-color: rgba(245, 158, 11, 0.5);
+    }
+
+    .aug-card.random.good {
+        border-color: rgba(16, 185, 129, 0.8);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .aug-card.random.bad {
+        border-color: rgba(239, 68, 68, 0.8);
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    .aug-icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+
+    .aug-name {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin: 10px 0;
+    }
+
+    .aug-desc {
+        font-size: 0.9em;
+        opacity: 0.8;
+    }
+
+    .aug-category {
+        font-size: 0.75em;
+        opacity: 0.6;
+        margin-top: 10px;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+        .augmentation-choices {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

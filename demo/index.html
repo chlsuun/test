@@ -7,6 +7,7 @@
     <title>세이노의 상점 - AI Gaming Agent Demo</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="character-images.css">
+    <link rel="stylesheet" href="augmentation-styles.css">
 </head>
 
 <body>
@@ -113,6 +114,18 @@
             </div>
         </div>
 
+        <!-- Augmentation Modal -->
+        <div class="modal" id="augmentation-modal">
+            <div class="modal-content augmentation-content">
+                <h2>🎉 레벨업!</h2>
+                <p class="level-up-message" id="level-up-message"></p>
+                <p class="modal-desc">증강을 선택하세요 (1개만 선택 가능)</p>
+                <div class="augmentation-choices" id="augmentation-choices">
+                    <!-- Augmentation cards will be inserted here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="footer">
             <p>💡 Tip: 세이노와 대화하고, 할인받아 물건 사고, 비싸게 팔아서 전설의 검을 획득하세요!</p>
@@ -128,6 +141,8 @@
         </footer>
     </div>
 
+    <script src="augmentations.js"></script>
+    <script src="sellNegotiation.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -65,17 +65,17 @@ const mockResponses = {
 const saynoEmotions = {
     neutral: {
         emoji: "💼",
-        image: "images/sayno_vase.webp",
+        image: "images/sayno_vase.jpg",
         class: "neutral"
     },
     angry: {
         emoji: "😠",
-        image: "images/sayno_mad.webp",
+        image: "images/sayno_mad.jpg",
         class: "angry"
     },
     pleased: {
         emoji: "😊",
-        image: "images/sayno_vase.webp", // 기본 이미지 사용
+        image: "images/sayno_vase.jpg", // 기본 이미지 사용
         class: "pleased"
     }
 };

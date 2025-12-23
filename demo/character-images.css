@@ -1,33 +1,33 @@
-/* Character image display additions */
+/* Character image display - FULLY VISIBLE, NO BLUR */
 .character-img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     border-radius: 20px;
-    filter: blur(2px) opacity(0.5);
+    filter: opacity(1.0) brightness(1.15);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     transition: all 0.5s ease;
 }
 
-/* Override character-image size for images */
+/* Character size - LARGER FOR VISIBILITY */
 .character-image {
-    width: 500px !important;
-    height: 500px !important;
+    width: 700px !important;
+    height: 700px !important;
 }
 
-/* Angry state - NO BLUR */
+/* Angry state - NO BLUR, FULLY VISIBLE */
 .character-image.angry .character-img {
-    filter: opacity(1.0) saturate(1.5) contrast(1.2) brightness(1.1);
+    filter: opacity(1.0) saturate(1.5) contrast(1.2) brightness(1.15);
     animation: angryShake 0.5s ease-in-out;
 }
 
-/* Pleased state - NO BLUR */
+/* Pleased state - NO BLUR, FULLY VISIBLE */
 .character-image.pleased .character-img {
-    filter: opacity(1.0) brightness(1.2);
+    filter: opacity(1.0) brightness(1.25);
     animation: pleasedGlow 2s ease-in-out infinite;
 }
 
-/* Updated animations for images */
+/* Updated animations */
 @keyframes angryShake {
 
     0%,
@@ -48,10 +48,10 @@
 
     0%,
     100% {
-        filter: blur(1px) opacity(0.6) brightness(1.1);
+        filter: opacity(1.0) brightness(1.25);
     }
 
     50% {
-        filter: blur(1px) opacity(0.7) brightness(1.2);
+        filter: opacity(1.0) brightness(1.35);
     }
 }

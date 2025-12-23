@@ -2,7 +2,7 @@
 function showSellNegotiationModal(itemNum) {
     const item = shopItems[itemNum];
     gameState.currentNegotiatingItem = itemNum;
-    gameState.isSelling = true;
+    gameState.isSelling = true; // CRITICAL: Mark as selling mode
 
     const basePrice = Math.floor(item.price * (gameState.baseSellPrice + gameState.sellPriceBonus / 100));
 

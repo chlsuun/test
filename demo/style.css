@@ -34,7 +34,7 @@ body {
 .header {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     padding: 20px 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .header-content {
@@ -53,7 +53,7 @@ body {
 
 .npc-avatar {
     font-size: 3em;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     padding: 10px 20px;
     border-radius: 15px;
 }
@@ -74,7 +74,7 @@ body {
 }
 
 .stat {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     padding: 10px 20px;
     border-radius: 10px;
     text-align: center;
@@ -97,6 +97,35 @@ body {
     margin-left: 3px;
 }
 
+.goal-stat {
+    min-width: 200px;
+}
+
+.goal-progress {
+    margin-top: 5px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transition: width 0.5s ease;
+    width: 33%;
+}
+
+.progress-text {
+    font-size: 0.8em;
+    opacity: 0.9;
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
@@ -111,7 +140,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     padding: 20px;
     backdrop-filter: blur(10px);
@@ -133,8 +162,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message.user {
@@ -172,7 +208,7 @@ body {
 }
 
 .message.user .message-bubble {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .message-time {
@@ -192,8 +228,8 @@ body {
     flex: 1;
     padding: 15px 20px;
     border-radius: 25px;
-    border: 2px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--light);
     font-size: 1em;
     outline: none;
@@ -202,7 +238,7 @@ body {
 
 .chat-input:focus {
     border-color: var(--primary);
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .send-btn {
@@ -235,8 +271,8 @@ body {
 .quick-btn {
     padding: 10px 20px;
     border-radius: 20px;
-    border: 2px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--light);
     cursor: pointer;
     transition: all 0.2s;
@@ -244,14 +280,14 @@ body {
 }
 
 .quick-btn:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary);
 }
 
 /* Shop Sidebar */
 .shop-sidebar {
     width: 350px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     padding: 20px;
     overflow-y: auto;
@@ -265,7 +301,7 @@ body {
 }
 
 .shop-item {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     padding: 15px;
     border-radius: 15px;
     margin-bottom: 15px;
@@ -275,7 +311,7 @@ body {
 }
 
 .shop-item:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary);
     transform: translateX(5px);
 }
@@ -338,7 +374,7 @@ body {
 .footer {
     padding: 20px;
     text-align: center;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     font-size: 0.9em;
 }
 
@@ -362,7 +398,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -381,18 +417,112 @@ body {
     .main-content {
         flex-direction: column;
     }
-    
+
     .shop-sidebar {
         width: 100%;
         max-height: 400px;
     }
-    
+
     .header-content {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .message-bubble {
         max-width: 85%;
     }
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--dark), var(--darker));
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--primary);
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.modal-desc {
+    text-align: center;
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+.persuasion-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.choice-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+    color: var(--light);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.choice-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.choice-icon {
+    font-size: 2em;
+}
+
+.choice-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.choice-desc {
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+.modal-close {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--danger);
 }

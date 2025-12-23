@@ -2,7 +2,22 @@
 const gameState = {
     gold: 1000,
     inventory: {},
-    conversationCount: 0
+    conversationCount: 0,
+    // Goal system
+    goalLevel: 'beginner',
+    totalBuys: 0,
+    totalSells: 0,
+    negotiationAttempts: 0,
+    negotiationSuccesses: 0,
+    totalProfit: 0,
+    currentNegotiatingItem: null
+};
+
+// Goals
+const goals = {
+    beginner: { gold: 3000, title: '견습 상인', reward: '세이노의 인정' },
+    intermediate: { gold: 5000, title: '숙련 상인', reward: '상인의 비법' },
+    master: { gold: 10000, title: '마스터 상인', reward: '세이노의 가르침' }
 };
 
 // Shop Items
@@ -22,34 +37,24 @@ const mockResponses = {
     greeting: [
         "어서오십시오... 아니, 그냥 구경꾼인가?",
         "손님이라도 돼야 인사를 받지. 뭘 원하나?",
-        "시간은 돈이다. 용건만 간단히.",
-        "여기는 자선단체가 아니다. 돈 있으면 말해."
+        "시간은 돈이다. 용건만 간단히."
     ],
-    discount: [
-        "가난이 벼슬이냐? 돈 벌어서 다시 와라.",
-        "깎아달라고? 협상을 구걸로 착각하지 마라.",
-        "내 물건은 제값을 아는 사람한테만 판다. 썩 꺼져.",
-        "가격은 그대로야. 싫으면 다른 데 가.",
-        "할인? 여긴 백화점이 아니다. 정가 아니면 나가."
+    negotiationSuccess: [
+        "...제법이군. {}G에 넘긴다.",
+        "흠. 네 말에 일리는 있다. {}G다.",
+        "좋아, 이번만이다. {}G."
     ],
-    fairDeal: [
-        "보는 눈은 있군. 가져가라.",
-        "정가를 낸다니, 현명한 선택이다.",
-        "좋아. 네가 이 물건의 가치를 아는구나.",
-        "그래, 이런 손님이라면 환영이지."
+    negotiationFail: [
+        "가난이 벼슬이냐? 가격은 그대로야.",
+        "협상을 구걸로 착각하지 마라.",
+        "내 물건은 제값을 아는 사람한테만 판다."
     ],
-    adviceMoney: [
-        "푼돈을 아끼지 않는 놈은 절대 큰돈을 못 쥔다.",
-        "돈을 버는 건 기술이고, 지키는 건 예술이다.",
-        "남들이 커피 마실 때 투자해라. 그게 부자 되는 길이다."
-    ],
-    default: [
-        "...그래서?",
-        "명확하게 말해.",
-        "용건만 간단히.",
-        "뭔 소리야.",
-        "이해가 안 되는데."
-    ]
+    goalAchieved: {
+        beginner: "...제법이군. 네 실력을 인정한다. 견습은 졸업이다.",
+        intermediate: "보는 눈이 있어. 이정도면 숙련 상인이지.",
+        master: "대단하군... 내 가르침을 완전히 이해했군. 합격이다."
+    },
+    default: ["...그래서?", "명확하게 말해.", "용건만 간단히."]
 };
 
 // DOM Elements
@@ -58,9 +63,13 @@ const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const goldDisplay = document.getElementById('gold');
 const itemCountDisplay = document.getElementById('item-count');
+const goalTitleDisplay = document.getElementById('goal-title');
+const goalProgressFill = document.getElementById('goal-progress');
+const goalTextDisplay = document.getElementById('goal-text');
 const shopItemsContainer = document.getElementById('shop-items');
 const inventorySection = document.getElementById('inventory-section');
 const inventoryItems = document.getElementById('inventory-items');
+const negotiationModal = document.getElementById('negotiation-modal');
 
 // Initialize
 init();
@@ -68,7 +77,7 @@ init();
 function init() {
     renderShopItems();
     updateStats();
-    addNPCMessage("어서오십시오, 손님... 아니면 구경꾼인가?");
+    addNPCMessage("어서오십시오, 손님... 목표는 " + goals[gameState.goalLevel].title + "이 되는 거다. 할 수 있겠나?");
 
     // Event Listeners
     sendBtn.addEventListener('click', sendMessage);
@@ -92,7 +101,6 @@ function sendMessage() {
     addUserMessage(message);
     userInput.value = '';
 
-    // Process message and get response
     setTimeout(() => {
         const response = processMessage(message);
         addNPCMessage(response);
@@ -106,7 +114,7 @@ function processMessage(message) {
     // 목록 보기
     if (lowerMsg.includes('목록') || lowerMsg.includes('리스트')) {
         showShopList();
-        return "마음에 드는 게 있으면 번호나 이름을 말해. 가격은 협상 불가다.";
+        return "마음에 드는 게 있으면 이름을 말하고 '할인'을 요청해봐. 쉽진 않을 거야.";
     }
 
     // 인벤토리  
@@ -117,7 +125,13 @@ function processMessage(message) {
 
     // 소지금 확인
     if (lowerMsg.includes('소지금') || lowerMsg.includes('내돈') || lowerMsg.includes('얼마있')) {
-        return `그 돈으로 뭘 살 수 있을지 생각해봐. (${gameState.gold}G)`;
+        return `${gameState.gold}G. 목표까지 ${goals[gameState.goalLevel].gold - gameState.gold}G 남았다.`;
+    }
+
+    // 목표 확인
+    if (lowerMsg.includes('목표')) {
+        const currentGoal = goals[gameState.goalLevel];
+        return `현재 목표: ${currentGoal.title} (${currentGoal.gold}G). 지금 ${gameState.gold}G 가지고 있고.`;
     }
 
     // 판매 시도
@@ -129,71 +143,85 @@ function processMessage(message) {
         return "뭘 팔겠다는 거야? 명확하게 말해.";
     }
 
-    // 구매 시도
-    const purchaseKeywords = ['구매', '살게', '사', '주세요', '줘', 'buy'];
-    const isPurchase = purchaseKeywords.some(kw => lowerMsg.includes(kw));
-
-    if (isPurchase) {
-        const itemNum = findItemNumber(message);
-        if (!itemNum) {
-            // 아이템 이름으로 찾기
-            for (const [num, item] of Object.entries(shopItems)) {
-                const cleanMsg = message.replace(/\s/g, '');
-                const cleanName = item.name.replace(/\s/g, '');
-                if (cleanMsg.includes(cleanName) || item.keywords.some(kw => cleanMsg.includes(kw))) {
-                    return buyItem(num);
-                }
-            }
-            return "무엇을 사겠다는 거야? 목록을 보고 정확히 말해.";
-        }
-        return buyItem(itemNum);
-    }
-
-    // 가격 문의
-    if (lowerMsg.includes('가격') || lowerMsg.includes('얼마')) {
-        for (const [num, item] of Object.entries(shopItems)) {
-            if (message.includes(item.name) || item.keywords.some(kw => message.includes(kw))) {
-                const sellPrice = Math.floor(item.price * 0.6);
-                return `${item.name}? 구매는 ${item.price}G, 판매는 ${sellPrice}G에 받아준다.`;
-            }
-        }
-        return "\"목록\" 쳐서 직접 봐. 다 적혀 있어.";
-    }
-
-    // 할인 요청
-    if (lowerMsg.includes('깎') || lowerMsg.includes('할인') || lowerMsg.includes('싸게')) {
-        return getRandomResponse('discount');
-    }
-
     // 인사
-    if (lowerMsg.includes('안녕') || lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+    if (lowerMsg.includes('안녕') || lowerMsg.includes('hello')) {
         return getRandomResponse('greeting');
-    }
-
-    // 조언
-    if (lowerMsg.includes('조언') || lowerMsg.includes('방법') || lowerMsg.includes('가르침')) {
-        return getRandomResponse('adviceMoney');
     }
 
     // 기본 응답
     return getRandomResponse('default');
 }
 
-function buyItem(itemNum) {
+function showNegotiationModal(itemNum) {
     const item = shopItems[itemNum];
-    if (!item) return "그런 물건은 없다.";
+    gameState.currentNegotiatingItem = itemNum;
 
-    if (gameState.gold < item.price) {
-        const shortage = item.price - gameState.gold;
-        return `돈이 ${shortage}G 모자라는데? 가난뱅이는 꿈도 꾸지 마.`;
-    }
+    const infoDiv = document.getElementById('negotiation-item-info');
+    infoDiv.innerHTML = `
+        <div style="text-align: center; margin: 15px 0;">
+            <h3>${item.name}</h3>
+            <p style="color: #ffd700; font-size: 1.3em;">정가: ${item.price}G</p>
+        </div>
+    `;
 
-    gameState.gold -= item.price;
-    gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
-    updateStats();
-    renderShopItems();
+    negotiationModal.style.display = 'flex';
+}
 
-    return `좋아. ${item.name}, ${item.price}G에 넘긴다. 헛되이 쓰지 마.`;
+function closeNegotiation() {
+    negotiationModal.style.display = 'none';
+    gameState.currentNegotiatingItem = null;
+}
+
+function negotiate(strategy) {
+    const itemNum = gameState.currentNegotiatingItem;
+    if (!itemNum) return;
+
+    const item = shopItems[itemNum];
+    gameState.negotiationAttempts++;
+
+    // 성공 확률 계산
+    const strategies = {
+        polite: { base: 15, message: "정말 필요합니다. 부탁드립니다..." },
+        logical: { base: 25, message: "다른 곳은 더 싸던데요. 이 가격이면 손해 아닙니까?" },
+        wisdom: { base: 35, message: "푼돈을 아끼는게 큰돈 버는 길 아니었습니까? 세이노님 가르침이..." }
+    };
+
+    const chosen = strategies[strategy];
+    const success = Math.random() * 100 < chosen.base;
+
+    addUserMessage(chosen.message);
+    closeNegotiation();
+
+    setTimeout(() => {
+        if (success) {
+            // 할인 성공
+            const discountPercent = 10 + Math.floor(Math.random() * 21); // 10-30%
+            const discountedPrice = Math.floor(item.price * (1 - discountPercent / 100));
+
+            gameState.negotiationSuccesses++;
+
+            if (gameState.gold < discountedPrice) {
+                const shortage = discountedPrice - gameState.gold;
+                addNPCMessage(`...좋아. ${discountedPrice}G에 넘긴다. 근데 네 돈이 ${shortage}G 모자란데?`);
+                return;
+            }
+
+            gameState.gold -= discountedPrice;
+            gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
+            gameState.totalBuys++;
+            gameState.totalProfit += (item.price - discountedPrice);
+
+            updateStats();
+            renderShopItems();
+            checkGoalAchievement();
+
+            const response = getRandomResponse('negotiationSuccess').replace('{}', discountedPrice);
+            addNPCMessage(response + ` (${discountPercent}% 할인)`);
+        } else {
+            // 할인 실패
+            addNPCMessage(getRandomResponse('negotiationFail') + ` 정가 ${item.price}G다.`);
+        }
+    }, 800);
 }
 
 function sellItem(itemNum) {
@@ -201,19 +229,23 @@ function sellItem(itemNum) {
     if (!item) return "그런 물건은 없다.";
 
     if (!gameState.inventory[itemNum] || gameState.inventory[itemNum] === 0) {
-        return "그걸 가지고 있지도 않잖아. 사기꾼인가?";
+        return "그걸 가지고 있지도 않잖아.";
     }
 
-    const sellPrice = Math.floor(item.price * 0.6);
+    const sellPrice = Math.floor(item.price * 0.7); // 70% 가격에 판매
     gameState.gold += sellPrice;
     gameState.inventory[itemNum]--;
+    gameState.totalSells++;
+
     if (gameState.inventory[itemNum] === 0) {
         delete gameState.inventory[itemNum];
     }
+
     updateStats();
     renderShopItems();
+    checkGoalAchievement();
 
-    return `${item.name}? 흠... ${sellPrice}G에 사주지. 후려치는 거 아니야.`;
+    return `${item.name}? ${sellPrice}G에 사주지. 나쁘지 않은 거래야.`;
 }
 
 function findItemNumber(message) {
@@ -228,6 +260,42 @@ function findItemNumber(message) {
 function getRandomResponse(category) {
     const responses = mockResponses[category];
     return responses[Math.floor(Math.random() * responses.length)];
+}
+
+function updateStats() {
+    goldDisplay.textContent = gameState.gold;
+    const itemCount = Object.values(gameState.inventory).reduce((sum, count) => sum + count, 0);
+    itemCountDisplay.textContent = itemCount;
+
+    // Update goal progress
+    const currentGoal = goals[gameState.goalLevel];
+    goalTitleDisplay.textContent = currentGoal.title;
+
+    const progress = Math.min((gameState.gold / currentGoal.gold) * 100, 100);
+    goalProgressFill.style.width = progress + '%';
+    goalTextDisplay.textContent = `${gameState.gold} / ${currentGoal.gold}G`;
+}
+
+function checkGoalAchievement() {
+    const currentGoal = goals[gameState.goalLevel];
+
+    if (gameState.gold >= currentGoal.gold) {
+        const message = mockResponses.goalAchieved[gameState.goalLevel];
+        addNPCMessage("🎉 " + message);
+
+        // Level up
+        if (gameState.goalLevel === 'beginner') {
+            gameState.goalLevel = 'intermediate';
+            addNPCMessage("다음 목표: " + goals.intermediate.title + " (" + goals.intermediate.gold + "G)");
+        } else if (gameState.goalLevel === 'intermediate') {
+            gameState.goalLevel = 'master';
+            addNPCMessage("최종 목표: " + goals.master.title + " (" + goals.master.gold + "G)");
+        } else if (gameState.goalLevel === 'master') {
+            addNPCMessage("축하한다. 네가 진정한 상인이다. 이제 더 이상 가르칠 게 없군.");
+        }
+
+        updateStats();
+    }
 }
 
 function addUserMessage(text) {
@@ -263,12 +331,6 @@ function getCurrentTime() {
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 }
 
-function updateStats() {
-    goldDisplay.textContent = gameState.gold;
-    const itemCount = Object.values(gameState.inventory).reduce((sum, count) => sum + count, 0);
-    itemCountDisplay.textContent = itemCount;
-}
-
 function renderShopItems() {
     shopItemsContainer.innerHTML = '';
     for (const [num, item] of Object.entries(shopItems)) {
@@ -276,14 +338,14 @@ function renderShopItems() {
         itemDiv.className = 'shop-item';
 
         const hasItem = gameState.inventory[num] > 0;
-        const sellPrice = Math.floor(item.price * 0.6);
+        const sellPrice = Math.floor(item.price * 0.7);
 
         itemDiv.innerHTML = `
             <div class="item-name">${num}. ${item.name}</div>
             <div class="item-price">구매: ${item.price}G | 판매: ${sellPrice}G</div>
             <div class="item-desc">${item.desc}</div>
             <div class="item-actions">
-                <button class="item-btn buy-btn" onclick="quickBuy('${num}')">구매</button>
+                <button class="item-btn buy-btn" onclick="showNegotiationModal('${num}')">할인 요청</button>
                 <button class="item-btn sell-btn" onclick="quickSell('${num}')" ${!hasItem ? 'disabled' : ''}>판매</button>
             </div>
         `;
@@ -311,17 +373,12 @@ function showInventory() {
                 itemDiv.className = 'shop-item';
                 itemDiv.innerHTML = `
                     <div class="item-name">${item.name} x${count}</div>
-                    <div class="item-price">${Math.floor(item.price * 0.6)}G (판매가)</div>
+                    <div class="item-price">${Math.floor(item.price * 0.7)}G (판매가)</div>
                 `;
                 inventoryItems.appendChild(itemDiv);
             }
         }
     }
-}
-
-function quickBuy(itemNum) {
-    const response = buyItem(itemNum);
-    addNPCMessage(response);
 }
 
 function quickSell(itemNum) {

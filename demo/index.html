@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세이노의 상점 - AI Gaming Agent Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="npc-info">
+                    <div class="npc-avatar">💼</div>
+                    <div>
+                        <h1>세이노의 상점</h1>
+                        <p class="subtitle">독설적이지만 현명한 상점 주인</p>
+                    </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat">
+                        <span class="stat-label">💰 소지금</span>
+                        <span class="stat-value" id="gold">1000</span>
+                        <span class="stat-unit">G</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">🎒 아이템</span>
+                        <span class="stat-value" id="item-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be added here -->
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="user-input" class="chat-input" placeholder="세이노에게 말을 걸어보세요..."
+                        autocomplete="off">
+                    <button id="send-btn" class="send-btn">전송</button>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-btn" data-action="목록">📋 상품 목록</button>
+                    <button class="quick-btn" data-action="인벤토리">🎒 인벤토리</button>
+                    <button class="quick-btn" data-action="안녕하세요">👋 인사</button>
+                </div>
+            </div>
+
+            <!-- Shop Sidebar -->
+            <div class="shop-sidebar" id="shop-sidebar">
+                <h3>상품 목록</h3>
+                <div class="shop-items" id="shop-items">
+                    <!-- Shop items will be rendered here -->
+                </div>
+                <div class="inventory-section" id="inventory-section" style="display: none;">
+                    <h3>내 인벤토리</h3>
+                    <div id="inventory-items">
+                        <!-- Inventory items will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>💡 Tip: '목록'으로 상품을 보거나, '강철검 주세요'처럼 말해보세요!</p>
+            <p class="github-link">
+                <a href="https://github.com/chlsuun/test" target="_blank">
+                    🔗 GitHub Repository
+                </a>
+                |
+                <a href="../index.html">
+                    📊 Presentation
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

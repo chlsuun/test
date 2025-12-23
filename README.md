@@ -1,6 +1,8 @@
 # AI Gaming Agent Portfolio
 
-**Live Presentation**: [https://chlsuun.github.io/test/](https://chlsuun.github.io/test/)
+**Live Demo Sites**:
+- 🎮 **[Interactive Chat Demo](https://chlsuun.github.io/test/demo/)** ⭐ NEW! - 브라우저에서 바로 체험
+- 📊 **[Project Presentation](https://chlsuun.github.io/test/)** - 프로젝트 소개
 
 Unity 엔진과 최신 LLM(Large Language Model) 기술을 결합하여, 플레이어와 고도로 상호작용하는 "Intelligent Gaming Agent"를 구현한 테크 데모 프로젝트입니다.
 

@@ -133,6 +133,96 @@ body {
     gap: 20px;
     padding: 20px;
     overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #2d1b3d 0%, #1a1a2e 50%, #0f0f1e 100%);
+}
+
+/* Emotion-based backgrounds */
+body.emotion-neutral .main-content {
+    background: linear-gradient(135deg, #2d1b3d 0%, #1a1a2e 50%, #0f0f1e 100%);
+}
+
+body.emotion-angry .main-content {
+    background: linear-gradient(135deg, #3d1b1b 0%, #2e1a1a 50%, #1e0f0f 100%);
+    animation: shake 0.5s;
+}
+
+body.emotion-pleased .main-content {
+    background: linear-gradient(135deg, #1b3d2d 0%, #1a2e1e 50%, #0f1e14 100%);
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Character Container */
+.character-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.character-image {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    filter: blur(1px) opacity(0.3);
+}
+
+.character-emoji {
+    font-size: 15em;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.character-image.angry .character-emoji {
+    animation: angryPulse 1s infinite;
+}
+
+.character-image.pleased .character-emoji {
+    animation: pleasedBounce 2s ease-in-out infinite;
+}
+
+@keyframes angryPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes pleasedBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Chat Container */

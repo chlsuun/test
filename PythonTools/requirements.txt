@@ -1,0 +1,9 @@
+openai
+requests
+beautifulsoup4
+pandas
+python-dotenv
+flask
+numpy
+scikit-learn
+google-generativeai

@@ -1,0 +1,31 @@
+{
+    "suspect_profile": {
+        "name": "Baron Zephyr",
+        "role": "Art Collector",
+        "personality": "Arrogant, wealthy, hates being accused.",
+        "secret": "He stole the painting to claim insurance money."
+    },
+    "crime": {
+        "event": "The Golden Phoenix painting was stolen last night.",
+        "time": "Between 11 PM and 1 AM.",
+        "location": "The Grand Gallery"
+    },
+    "evidence": [
+        {
+            "id": "e1",
+            "description": "Security camera footage shows a figure entering at 11:30 PM."
+        },
+        {
+            "id": "e2",
+            "description": "A glove belonging to Zephyr was found near the back exit."
+        },
+        {
+            "id": "e3",
+            "description": "Zephyr claims he was at a dinner party until midnight."
+        },
+        {
+            "id": "e4",
+            "description": "The dinner party host says Zephyr left early at 10:30 PM."
+        }
+    ]
+}

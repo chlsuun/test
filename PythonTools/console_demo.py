@@ -21,7 +21,7 @@ try:
     gemini_key = os.getenv("GOOGLE_API_KEY")
     if gemini_key:
         genai.configure(api_key=gemini_key)
-        gemini_model = genai.GenerativeModel('gemini-pro')
+        gemini_model = genai.GenerativeModel('gemini-1.5-flash')
         HAS_GEMINI = True
 except:
     pass

@@ -8,19 +8,11 @@ const gameState = {
     totalSells: 0,
     negotiationAttempts: 0,
     negotiationSuccesses: 0,
-    negotiationFailures: 0,
+    negotiationFailures: 0,  // ?묒긽 ?ㅽ뙣 ?잛닔 (?뚰듃??
     totalProfit: 0,
     currentNegotiatingItem: null,
     saynoEmotion: 'neutral',
     isSelling: false,
-
-    // === ?됲뙋 ?쒖뒪??(Reputation System) ===
-    reputation: 0,              // ?곸씤 ?됲뙋 (寃쏀뿕移?
-    reputationLevel: 1,         // ?됲뙋 ?덈꺼
-
-    // === ?묒긽 ?덉뒪?좊━ (Anti-Repetition) ===
-    negotiationHistory: [],     // ?ъ슜???묒긽 湲곕줉
-
     // 利앷컯 ?쒖뒪??    augmentations: [],
     sellNegotiationBonus: 0,
     buyNegotiationBonus: 0,
@@ -480,8 +472,7 @@ function submitNegotiation() {
             if (isSelling) {
                 // ===== ?먮ℓ 紐⑤뱶 =====
                 const basePrice = Math.floor(item.price * (gameState.baseSellPrice + gameState.sellPriceBonus / 100));
-                const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20);
-                const finalPrice = Math.floor(basePrice * (1 + bonusPercent / 100));
+                const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20); // 10-30% 蹂대꼫??                const finalPrice = Math.floor(basePrice * (1 + bonusPercent / 100));
 
                 gameState.gold += finalPrice;
                 gameState.inventory[itemNum]--;
@@ -490,44 +481,28 @@ function submitNegotiation() {
                 }
                 gameState.totalSells++;
 
-                // === ?됲뙋 ?띾뱷 ===
-                const profit = finalPrice - basePrice;
-                const repGain = gainReputation('sell', profit, true);
-
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                // 諛섎났 寃쎄퀬 硫붿떆吏 ?곗꽑 ?쒖떆
-                if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
-                    addNPCMessage(analysis.repetitionCheck.message);
-                    setTimeout(() => {
-                        addNPCMessage(`洹몃옒??${finalPrice}G???ъ＜吏. (+${bonusPercent}% 蹂대꼫?? +${repGain} ?됲뙋)`);
-                    }, 1000);
-                } else {
-                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G???ъ＜吏. (+${bonusPercent}% 蹂대꼫?? +${repGain} ?됲뙋)`;
-                    addNPCMessage(npcResponse);
-                }
+                const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G???ъ＜吏. (+${bonusPercent}% 蹂대꼫??`;
+                addNPCMessage(npcResponse);
 
-                // ?덉뒪?좊━??異붽?
-                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
-                addToNegotiationHistory(userInput, matchedKeywords, true);
-
+                // ?붾젅硫뷀듃由?濡쒓퉭
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse: "?먮ℓ ?깃났",
+                    npcResponse,
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: basePrice,
                     finalPrice: finalPrice,
                     discountPercent: bonusPercent,
                     persuasionScore: analysis.persuasionScore,
-                    matchedKeywords: matchedKeywords,
+                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'sell',
-                    repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
+                    mode: 'sell'
                 });
 
             } else {
@@ -536,10 +511,6 @@ function submitNegotiation() {
                     updateSaynoEmotion('angry');
                     const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 洹쇰뜲 ?덉씠 紐⑥옄?쇱옏?? ${analysis.finalPrice}G 媛?몄?.`;
                     addNPCMessage(response);
-
-                    // ?덉뒪?좊━??異붽? (?ㅽ뙣)
-                    const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
-                    addToNegotiationHistory(userInput, matchedKeywords, false);
 
                     telemetry.logNegotiation({
                         userInput,
@@ -550,12 +521,11 @@ function submitNegotiation() {
                         finalPrice: analysis.finalPrice,
                         discountPercent: analysis.discountPercent,
                         persuasionScore: analysis.persuasionScore,
-                        matchedKeywords: matchedKeywords,
+                        matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
                         matchedCategories: analysis.keywordAnalysis.matchedCategories,
                         success: false,
                         attemptNumber: gameState.negotiationAttempts,
-                        mode: 'buy',
-                        repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
+                        mode: 'buy'
                     });
 
                     return;
@@ -565,44 +535,27 @@ function submitNegotiation() {
                 gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
                 gameState.totalBuys++;
 
-                // === ?됲뙋 ?띾뱷 ===
-                const discount = item.price - analysis.finalPrice;
-                const repGain = gainReputation('buy', discount, true);
-
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                // 諛섎났 寃쎄퀬 硫붿떆吏 ?곗꽑 ?쒖떆
-                if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
-                    addNPCMessage(analysis.repetitionCheck.message);
-                    setTimeout(() => {
-                        addNPCMessage(`洹몃옒??${analysis.finalPrice}G???섍린吏. (${analysis.discountPercent}% ?좎씤, +${repGain} ?됲뙋)`);
-                    }, 1000);
-                } else {
-                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} (+${repGain} ?됲뙋)`;
-                    addNPCMessage(npcResponse);
-                }
-
-                // ?덉뒪?좊━??異붽?
-                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
-                addToNegotiationHistory(userInput, matchedKeywords, true);
+                const npcResponse = negotiationEngine.generateResponse(analysis, item);
+                addNPCMessage(npcResponse);
 
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse: "援щℓ ?깃났",
+                    npcResponse,
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: item.price,
                     finalPrice: analysis.finalPrice,
                     discountPercent: analysis.discountPercent,
                     persuasionScore: analysis.persuasionScore,
-                    matchedKeywords: matchedKeywords,
+                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'buy',
-                    repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
+                    mode: 'buy'
                 });
 
                 checkGoalAchievement();

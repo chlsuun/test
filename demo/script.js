@@ -21,7 +21,11 @@ const gameState = {
     buyDiscountBonus: 0,
     baseSellPrice: 0.70,
     negotiationPenaltyTurns: 0,
-    leveledUp: false
+    leveledUp: false,
+    // 평판 시스템 (CRITICAL: Required by reputation-system.js)
+    reputation: 0,
+    reputationLevel: 1,
+    negotiationHistory: []
 };
 
 // Goals - 최종 목표: 전설의 검 싸게 구매!

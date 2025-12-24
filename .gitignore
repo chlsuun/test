@@ -69,3 +69,8 @@ venv.bak/
 # OS Generated
 .DS_Store
 Thumbs.db
+
+# Backup and Temporary Files
+*_backup.js
+*_clean.js
+fix_script.py

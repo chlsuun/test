@@ -474,6 +474,13 @@ function submitNegotiation() {
     addUserMessage(userInput);
     closeNegotiation();
 
+    // === 반복 감지 메시지 표시 (CHANGE #5) ===
+    if (analysis.repetitionCheck && analysis.repetitionCheck.message) {
+        setTimeout(() => {
+            addNPCMessage(analysis.repetitionCheck.message);
+        }, 500);
+    }
+
     setTimeout(() => {
         if (analysis.success) {
             // 성공!
@@ -493,6 +500,10 @@ function submitNegotiation() {
                 }
                 gameState.totalSells++;
 
+                // === 평판 획득 (CHANGE #2) ===
+                const profit = finalPrice - basePrice;
+                gainReputation('sell', profit, true);
+
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
@@ -500,7 +511,11 @@ function submitNegotiation() {
                 const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G에 사주지. (+${bonusPercent}% 보너스)`;
                 addNPCMessage(npcResponse);
 
-                // 텔레메트리 로깅
+                // === 히스토리 기록 (CHANGE #3) ===
+                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                addToNegotiationHistory(userInput, matchedKeywords, true);
+
+                // 텔레메트리 로깅 (CHANGE #6)
                 telemetry.logNegotiation({
                     userInput,
                     npcResponse,
@@ -514,7 +529,9 @@ function submitNegotiation() {
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'sell'
+                    mode: 'sell',
+                    repetitionPenalty: analysis.repetitionCheck ? analysis.repetitionCheck.penalty : 1.0,
+                    repetitionType: analysis.repetitionCheck ? analysis.repetitionCheck.type : 'none'
                 });
 
             } else {
@@ -523,6 +540,10 @@ function submitNegotiation() {
                     updateSaynoEmotion('angry');
                     const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 근데 돈이 모자라잖아! ${analysis.finalPrice}G 가져와.`;
                     addNPCMessage(response);
+
+                    // 실패 기록 (돈 부족)
+                    const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                    addToNegotiationHistory(userInput, matchedKeywords, false);
 
                     telemetry.logNegotiation({
                         userInput,
@@ -537,7 +558,9 @@ function submitNegotiation() {
                         matchedCategories: analysis.keywordAnalysis.matchedCategories,
                         success: false,
                         attemptNumber: gameState.negotiationAttempts,
-                        mode: 'buy'
+                        mode: 'buy',
+                        repetitionPenalty: analysis.repetitionCheck ? analysis.repetitionCheck.penalty : 1.0,
+                        repetitionType: analysis.repetitionCheck ? analysis.repetitionCheck.type : 'none'
                     });
 
                     return;
@@ -547,6 +570,10 @@ function submitNegotiation() {
                 gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
                 gameState.totalBuys++;
 
+                // === 평판 획득 (CHANGE #1) ===
+                const discount = item.price - analysis.finalPrice;
+                gainReputation('buy', discount, true);
+
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
@@ -554,6 +581,11 @@ function submitNegotiation() {
                 const npcResponse = negotiationEngine.generateResponse(analysis, item);
                 addNPCMessage(npcResponse);
 
+                // === 히스토리 기록 (CHANGE #3) ===
+                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                addToNegotiationHistory(userInput, matchedKeywords, true);
+
+                // 텔레메트리 로깅 (CHANGE #6)
                 telemetry.logNegotiation({
                     userInput,
                     npcResponse,
@@ -567,7 +599,9 @@ function submitNegotiation() {
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'buy'
+                    mode: 'buy',
+                    repetitionPenalty: analysis.repetitionCheck ? analysis.repetitionCheck.penalty : 1.0,
+                    repetitionType: analysis.repetitionCheck ? analysis.repetitionCheck.type : 'none'
                 });
 
                 checkGoalAchievement();
@@ -580,7 +614,11 @@ function submitNegotiation() {
             const npcResponse = negotiationEngine.generateResponse(analysis, item);
             addNPCMessage(npcResponse);
 
-            // 텔레메트리 로깅
+            // === 히스토리 기록 (CHANGE #4) ===
+            const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+            addToNegotiationHistory(userInput, matchedKeywords, false);
+
+            // 텔레메트리 로깅 (CHANGE #6)
             telemetry.logNegotiation({
                 userInput,
                 npcResponse,
@@ -594,7 +632,9 @@ function submitNegotiation() {
                 matchedCategories: analysis.keywordAnalysis.matchedCategories,
                 success: false,
                 attemptNumber: gameState.negotiationAttempts,
-                mode: isSelling ? 'sell' : 'buy'
+                mode: isSelling ? 'sell' : 'buy',
+                repetitionPenalty: analysis.repetitionCheck ? analysis.repetitionCheck.penalty : 1.0,
+                repetitionType: analysis.repetitionCheck ? analysis.repetitionCheck.type : 'none'
             });
 
             // 다음 협상 시 힌트 제공

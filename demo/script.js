@@ -8,11 +8,19 @@ const gameState = {
     totalSells: 0,
     negotiationAttempts: 0,
     negotiationSuccesses: 0,
-    negotiationFailures: 0,  // 협상 실패 횟수 (힌트용)
+    negotiationFailures: 0,
     totalProfit: 0,
     currentNegotiatingItem: null,
     saynoEmotion: 'neutral',
     isSelling: false,
+
+    // === 평판 시스템 (Reputation System) ===
+    reputation: 0,              // 상인 평판 (경험치)
+    reputationLevel: 1,         // 평판 레벨
+
+    // === 협상 히스토리 (Anti-Repetition) ===
+    negotiationHistory: [],     // 사용된 협상 기록
+
     // 증강 시스템
     augmentations: [],
     sellNegotiationBonus: 0,
@@ -479,7 +487,7 @@ function submitNegotiation() {
             if (isSelling) {
                 // ===== 판매 모드 =====
                 const basePrice = Math.floor(item.price * (gameState.baseSellPrice + gameState.sellPriceBonus / 100));
-                const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20); // 10-30% 보너스
+                const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20);
                 const finalPrice = Math.floor(basePrice * (1 + bonusPercent / 100));
 
                 gameState.gold += finalPrice;
@@ -489,28 +497,44 @@ function submitNegotiation() {
                 }
                 gameState.totalSells++;
 
+                // === 평판 획득 ===
+                const profit = finalPrice - basePrice;
+                const repGain = gainReputation('sell', profit, true);
+
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G에 사주지. (+${bonusPercent}% 보너스)`;
-                addNPCMessage(npcResponse);
+                // 반복 경고 메시지 우선 표시
+                if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
+                    addNPCMessage(analysis.repetitionCheck.message);
+                    setTimeout(() => {
+                        addNPCMessage(`그래도 ${finalPrice}G에 사주지. (+${bonusPercent}% 보너스, +${repGain} 평판)`);
+                    }, 1000);
+                } else {
+                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G에 사주지. (+${bonusPercent}% 보너스, +${repGain} 평판)`;
+                    addNPCMessage(npcResponse);
+                }
 
-                // 텔레메트리 로깅
+                // 히스토리에 추가
+                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                addToNegotiationHistory(userInput, matchedKeywords, true);
+
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse,
+                    npcResponse: "판매 성공",
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: basePrice,
                     finalPrice: finalPrice,
                     discountPercent: bonusPercent,
                     persuasionScore: analysis.persuasionScore,
-                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                    matchedKeywords: matchedKeywords,
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'sell'
+                    mode: 'sell',
+                    repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
                 });
 
             } else {
@@ -519,6 +543,10 @@ function submitNegotiation() {
                     updateSaynoEmotion('angry');
                     const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 근데 돈이 모자라잖아! ${analysis.finalPrice}G 가져와.`;
                     addNPCMessage(response);
+
+                    // 히스토리에 추가 (실패)
+                    const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                    addToNegotiationHistory(userInput, matchedKeywords, false);
 
                     telemetry.logNegotiation({
                         userInput,
@@ -529,11 +557,12 @@ function submitNegotiation() {
                         finalPrice: analysis.finalPrice,
                         discountPercent: analysis.discountPercent,
                         persuasionScore: analysis.persuasionScore,
-                        matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                        matchedKeywords: matchedKeywords,
                         matchedCategories: analysis.keywordAnalysis.matchedCategories,
                         success: false,
                         attemptNumber: gameState.negotiationAttempts,
-                        mode: 'buy'
+                        mode: 'buy',
+                        repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
                     });
 
                     return;
@@ -543,27 +572,44 @@ function submitNegotiation() {
                 gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
                 gameState.totalBuys++;
 
+                // === 평판 획득 ===
+                const discount = item.price - analysis.finalPrice;
+                const repGain = gainReputation('buy', discount, true);
+
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                const npcResponse = negotiationEngine.generateResponse(analysis, item);
-                addNPCMessage(npcResponse);
+                // 반복 경고 메시지 우선 표시
+                if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
+                    addNPCMessage(analysis.repetitionCheck.message);
+                    setTimeout(() => {
+                        addNPCMessage(`그래도 ${analysis.finalPrice}G에 넘기지. (${analysis.discountPercent}% 할인, +${repGain} 평판)`);
+                    }, 1000);
+                } else {
+                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} (+${repGain} 평판)`;
+                    addNPCMessage(npcResponse);
+                }
+
+                // 히스토리에 추가
+                const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
+                addToNegotiationHistory(userInput, matchedKeywords, true);
 
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse,
+                    npcResponse: "구매 성공",
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: item.price,
                     finalPrice: analysis.finalPrice,
                     discountPercent: analysis.discountPercent,
                     persuasionScore: analysis.persuasionScore,
-                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                    matchedKeywords: matchedKeywords,
                     matchedCategories: analysis.keywordAnalysis.matchedCategories,
                     success: true,
                     attemptNumber: gameState.negotiationAttempts,
-                    mode: 'buy'
+                    mode: 'buy',
+                    repetitionPenalty: analysis.repetitionCheck?.penalty || 1.0
                 });
 
                 checkGoalAchievement();
@@ -679,16 +725,31 @@ function getRandomFrom(array) {
 }
 
 function updateStats() {
-    goldDisplay.textContent = gameState.gold;
-    const itemCount = Object.values(gameState.inventory).reduce((sum, count) => sum + count, 0);
-    itemCountDisplay.textContent = itemCount;
+    document.getElementById('gold').textContent = gameState.gold;
+    document.getElementById('total-buys').textContent = gameState.totalBuys;
+    document.getElementById('total-sells').textContent = gameState.totalSells;
 
-    const currentGoal = goals[gameState.goalLevel];
-    goalTitleDisplay.textContent = currentGoal.title;
+    // 평판 정보 표시
+    const repInfo = getReputationInfo();
+    const goalDisplay = document.getElementById('goal');
 
-    const progress = Math.min((gameState.gold / currentGoal.gold) * 100, 100);
-    goalProgressFill.style.width = progress + '%';
-    goalTextDisplay.textContent = `${gameState.gold} / ${currentGoal.gold}G`;
+    if (repInfo.isMaxLevel) {
+        goalDisplay.innerHTML = `
+            <strong>평판:</strong> ${repInfo.name} (최대 레벨)<br>
+            <strong>평판 점수:</strong> ${repInfo.current}
+        `;
+    } else {
+        goalDisplay.innerHTML = `
+            <strong>평판:</strong> ${repInfo.name} (Lv.${repInfo.level})<br>
+            <strong>진행도:</strong> ${repInfo.current}/${repInfo.required} (${repInfo.progress}%)<br>
+            <strong>다음 레벨:</strong> ${repInfo.nextName}
+        `;
+    }
+
+    // 기존 목표 정보 (전설의 검)
+    if (gameState.goalLevel === 'legendary_sword') {
+        goalDisplay.innerHTML += `<br><strong>최종 목표:</strong> 전설의 검 구매 (2000G)`;
+    }
 }
 
 function checkGoalAchievement() {

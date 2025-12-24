@@ -14,7 +14,7 @@ class NegotiationEngine {
     }
 
     /**
-     * Analyze negotiation attempt
+     * Analyze negotiation attempt (with anti-repetition)
      * @param {string} userInput - User's persuasion message
      * @param {Object} item - Item being negotiated
      * @param {Object} gameState - Current game state
@@ -24,8 +24,15 @@ class NegotiationEngine {
         // Keyword analysis
         const keywordAnalysis = this.keywordMatcher.analyze(userInput);
 
+        // === 반복 체크 (Anti-Repetition) ===
+        const matchedKeywords = keywordAnalysis.matchedKeywords.map(k => k.keyword);
+        const repetitionCheck = checkRepetition(userInput, matchedKeywords);
+
+        // 반복 페널티 적용
+        let adjustedScore = keywordAnalysis.normalizedScore * repetitionCheck.penalty;
+
         // Calculate success rate
-        const baseRate = keywordAnalysis.normalizedScore * 100;
+        const baseRate = adjustedScore * 100;
         const bonusRate = gameState.buyNegotiationBonus || 0;
         const penaltyRate = gameState.negotiationPenalty || 0;
         const finalRate = Math.max(5, Math.min(95, baseRate + bonusRate + penaltyRate));
@@ -37,23 +44,30 @@ class NegotiationEngine {
         let discountPercent = 0;
         let finalPrice = item.price;
 
-        if (success) {
-            // Discount based on persuasion quality
-            const baseDiscount = 10; // Minimum 10%
-            const maxDiscount = 30;  // Maximum 30%
-            const scoreDiscount = keywordAnalysis.normalizedScore * (maxDiscount - baseDiscount);
+        if (success && !repetitionCheck.isRepetition) {
+            // 성공 + 반복 아님
+            const baseDiscount = 10;
+            const maxDiscount = 30;
+            const scoreDiscount = adjustedScore * (maxDiscount - baseDiscount);
             discountPercent = Math.floor(baseDiscount + scoreDiscount);
+            finalPrice = Math.floor(item.price * (1 - discountPercent / 100));
+        } else if (success && repetitionCheck.isRepetition) {
+            // 성공했지만 반복 사용 → 할인 감소
+            const reducedDiscount = Math.floor(10 * repetitionCheck.penalty);
+            discountPercent = reducedDiscount;
             finalPrice = Math.floor(item.price * (1 - discountPercent / 100));
         }
 
         return {
-            success,
-            persuasionScore: keywordAnalysis.normalizedScore,
+            success: success && !repetitionCheck.isRepetition, // 완전 반복 시 실패 처리
+            persuasionScore: adjustedScore,
+            originalScore: keywordAnalysis.normalizedScore,
             successRate: finalRate,
             discountPercent,
             finalPrice,
             originalPrice: item.price,
             keywordAnalysis,
+            repetitionCheck, // 반복 정보 포함
             feedback: this.keywordMatcher.getFeedback(keywordAnalysis)
         };
     }

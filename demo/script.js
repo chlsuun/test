@@ -102,7 +102,6 @@ const shopItemsContainer = document.getElementById('shop-items');
 const inventorySection = document.getElementById('inventory-section');
 const inventoryItems = document.getElementById('inventory-items');
 const negotiationModal = document.getElementById('negotiation-modal');
-const saynoCharacter = document.getElementById('sayno-character');
 
 // Initialize
 init();
@@ -310,16 +309,34 @@ function updateSaynoEmotion(emotion) {
     gameState.saynoEmotion = emotion;
     const emotionData = saynoEmotions[emotion];
 
-    // Update character visual with ACTUAL IMAGE
-    saynoCharacter.innerHTML = `
-        <div class="character-image ${emotionData.class}">
-            <img src="${emotionData.image}" 
-                 alt="Sayno ${emotion}" 
-                 class="character-img" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="character-emoji" style="display:none;">${emotionData.emoji}</div>
-        </div>
-    `;
+    // Update portrait image
+    const portraitImg = document.getElementById('portrait-img');
+    const portrait = document.getElementById('character-portrait');
+    const indicator = document.getElementById('emotion-indicator');
+
+    if (portraitImg && portrait && indicator) {
+        // Change image
+        portraitImg.src = emotionData.image;
+
+        // Update portrait class
+        portrait.className = `character-portrait ${emotion}`;
+
+        // Update emotion indicator
+        indicator.className = `emotion-indicator ${emotion}`;
+
+        // Update emotion label
+        const emotionLabels = {
+            neutral: { icon: '💼', label: '평온' },
+            angry: { icon: '😠', label: '화남' },
+            pleased: { icon: '😊', label: '만족' }
+        };
+
+        const emotionInfo = emotionLabels[emotion];
+        indicator.innerHTML = `
+            <span class="emotion-icon">${emotionInfo.icon}</span>
+            <span class="emotion-label">${emotionInfo.label}</span>
+        `;
+    }
 
     // Add emotion class to body for background effects
     document.body.className = `emotion-${emotion}`;

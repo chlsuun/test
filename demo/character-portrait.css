@@ -1,0 +1,110 @@
+/* Character Portrait in Sidebar */
+.character-portrait-container {
+    margin-bottom: 25px;
+}
+
+.character-portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 4px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease;
+    background: rgba(26, 20, 16, 0.5);
+}
+
+.portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+/* Emotion Indicator */
+.emotion-indicator {
+    margin-top: 15px;
+    text-align: center;
+    padding: 12px;
+    background: rgba(212, 165, 116, 0.2);
+    border-radius: 10px;
+    border: 2px solid rgba(212, 165, 116, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.emotion-icon {
+    font-size: 1.5em;
+}
+
+.emotion-label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--light);
+}
+
+/* Emotion States */
+.character-portrait.neutral {
+    border-color: var(--primary);
+}
+
+.character-portrait.angry {
+    border-color: var(--danger);
+    animation: portraitShake 0.5s ease-in-out;
+}
+
+.character-portrait.angry .portrait-img {
+    filter: saturate(1.5) contrast(1.2);
+}
+
+.emotion-indicator.angry {
+    background: rgba(168, 91, 91, 0.3);
+    border-color: var(--danger);
+}
+
+.character-portrait.pleased {
+    border-color: var(--success);
+    animation: portraitGlow 2s ease-in-out infinite;
+}
+
+.character-portrait.pleased .portrait-img {
+    filter: brightness(1.1);
+}
+
+.emotion-indicator.pleased {
+    background: rgba(124, 156, 107, 0.3);
+    border-color: var(--success);
+}
+
+/* Animations */
+@keyframes portraitShake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-2deg);
+    }
+
+    75% {
+        transform: rotate(2deg);
+    }
+}
+
+@keyframes portraitGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 10px 40px rgba(124, 156, 107, 0.6),
+            0 0 20px rgba(124, 156, 107, 0.4);
+    }
+}

@@ -800,7 +800,8 @@ body {
 }
 
 .negotiate-submit-btn,
-.direct-buy-btn {
+.direct-buy-btn,
+.modal-close {
     flex: 1;
     padding: 12px 20px;
     border: none;
@@ -830,6 +831,18 @@ body {
 .direct-buy-btn:hover {
     background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.3));
     border-color: rgba(76, 175, 80, 0.7);
+    transform: translateY(-2px);
+}
+
+.modal-close {
+    background: rgba(244, 67, 54, 0.2);
+    border: 2px solid rgba(244, 67, 54, 0.5);
+    color: var(--light);
+}
+
+.modal-close:hover {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: rgba(244, 67, 54, 0.7);
     transform: translateY(-2px);
 }
 

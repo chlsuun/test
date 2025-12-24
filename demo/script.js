@@ -448,59 +448,156 @@ function submitNegotiation() {
 
     const item = shopItems[itemNum];
     const userInput = document.getElementById('negotiation-input').value.trim();
+    const isSelling = gameState.isSelling || false;
 
     if (!userInput) {
         addNPCMessage("...말을 해야 협상이 되지 않겠나?");
         return;
     }
 
-    // 키워드 분석
-    const analysis = analyzeNegotiation(userInput);
-    gameState.negotiationAttempts++;
+    // 판매 모드일 때 인벤토리 확인
+    if (isSelling && (!gameState.inventory[itemNum] || gameState.inventory[itemNum] === 0)) {
+        addNPCMessage("그걸 가지고 있지도 않잖아. 사기 치려고?");
+        closeNegotiation();
+        return;
+    }
 
-    // 성공 판정 (점수 기반 + 보너스)
-    const baseSuccessRate = analysis.score;
-    const bonusRate = gameState.buyNegotiationBonus;
-    const finalRate = Math.min(95, baseSuccessRate + bonusRate);
-    const success = Math.random() * 100 < finalRate;
+    // 키워드 분석 (Advanced Negotiation Engine 사용)
+    const analysis = negotiationEngine.analyze(userInput, item, gameState);
+    gameState.negotiationAttempts++;
 
     // 사용자 메시지 표시
     addUserMessage(userInput);
     closeNegotiation();
 
     setTimeout(() => {
-        if (success) {
+        if (analysis.success) {
             // 성공!
             gameState.negotiationSuccesses++;
-            gameState.negotiationFailures = 0; // 성공 시 실패 카운터 리셋
+            gameState.negotiationFailures = 0;
 
-            const discountPercent = 10 + Math.floor(Math.random() * 21); // 10-30%
-            const discountedPrice = Math.floor(item.price * (1 - discountPercent / 100));
+            if (isSelling) {
+                // ===== 판매 모드 =====
+                const basePrice = Math.floor(item.price * (gameState.baseSellPrice + gameState.sellPriceBonus / 100));
+                const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20); // 10-30% 보너스
+                const finalPrice = Math.floor(basePrice * (1 + bonusPercent / 100));
 
-            if (gameState.gold < discountedPrice) {
-                updateSaynoEmotion('angry');
-                addNPCMessage(`${generateNegotiationResponse(analysis, item, true)} ${discountedPrice}G에 넘긴다. 근데 돈이 모자라잖아!`);
-                return;
+                gameState.gold += finalPrice;
+                gameState.inventory[itemNum]--;
+                if (gameState.inventory[itemNum] === 0) {
+                    delete gameState.inventory[itemNum];
+                }
+                gameState.totalSells++;
+
+                updateStats();
+                renderShopItems();
+                updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
+
+                const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G에 사주지. (+${bonusPercent}% 보너스)`;
+                addNPCMessage(npcResponse);
+
+                // 텔레메트리 로깅
+                telemetry.logNegotiation({
+                    userInput,
+                    npcResponse,
+                    itemId: itemNum,
+                    itemName: item.name,
+                    originalPrice: basePrice,
+                    finalPrice: finalPrice,
+                    discountPercent: bonusPercent,
+                    persuasionScore: analysis.persuasionScore,
+                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                    matchedCategories: analysis.keywordAnalysis.matchedCategories,
+                    success: true,
+                    attemptNumber: gameState.negotiationAttempts,
+                    mode: 'sell'
+                });
+
+            } else {
+                // ===== 구매 모드 =====
+                if (gameState.gold < analysis.finalPrice) {
+                    updateSaynoEmotion('angry');
+                    const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 근데 돈이 모자라잖아! ${analysis.finalPrice}G 가져와.`;
+                    addNPCMessage(response);
+
+                    telemetry.logNegotiation({
+                        userInput,
+                        npcResponse: response,
+                        itemId: itemNum,
+                        itemName: item.name,
+                        originalPrice: item.price,
+                        finalPrice: analysis.finalPrice,
+                        discountPercent: analysis.discountPercent,
+                        persuasionScore: analysis.persuasionScore,
+                        matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                        matchedCategories: analysis.keywordAnalysis.matchedCategories,
+                        success: false,
+                        attemptNumber: gameState.negotiationAttempts,
+                        mode: 'buy'
+                    });
+
+                    return;
+                }
+
+                gameState.gold -= analysis.finalPrice;
+                gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
+                gameState.totalBuys++;
+
+                updateStats();
+                renderShopItems();
+                updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
+
+                const npcResponse = negotiationEngine.generateResponse(analysis, item);
+                addNPCMessage(npcResponse);
+
+                telemetry.logNegotiation({
+                    userInput,
+                    npcResponse,
+                    itemId: itemNum,
+                    itemName: item.name,
+                    originalPrice: item.price,
+                    finalPrice: analysis.finalPrice,
+                    discountPercent: analysis.discountPercent,
+                    persuasionScore: analysis.persuasionScore,
+                    matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                    matchedCategories: analysis.keywordAnalysis.matchedCategories,
+                    success: true,
+                    attemptNumber: gameState.negotiationAttempts,
+                    mode: 'buy'
+                });
+
+                checkGoalAchievement();
             }
-
-            gameState.gold -= discountedPrice;
-            gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
-            gameState.totalBuys++;
-
-            updateStats();
-            renderShopItems();
-            updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
-
-            addNPCMessage(`${generateNegotiationResponse(analysis, item, true)} ${discountedPrice}G에 넘기지. (${discountPercent}% 할인)`);
-            checkGoalAchievement();
         } else {
             // 실패
             gameState.negotiationFailures++;
             updateSaynoEmotion('angry');
-            addNPCMessage(generateNegotiationResponse(analysis, item, false));
+
+            const npcResponse = negotiationEngine.generateResponse(analysis, item);
+            addNPCMessage(npcResponse);
+
+            // 텔레메트리 로깅
+            telemetry.logNegotiation({
+                userInput,
+                npcResponse,
+                itemId: itemNum,
+                itemName: item.name,
+                originalPrice: item.price,
+                finalPrice: item.price,
+                discountPercent: 0,
+                persuasionScore: analysis.persuasionScore,
+                matchedKeywords: analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword),
+                matchedCategories: analysis.keywordAnalysis.matchedCategories,
+                success: false,
+                attemptNumber: gameState.negotiationAttempts,
+                mode: isSelling ? 'sell' : 'buy'
+            });
 
             // 다음 협상 시 힌트 제공
-            const nextHint = getProgressiveHint();
+            const nextHint = isSelling ?
+                getSellHint(gameState.negotiationFailures) :
+                negotiationEngine.getHint(gameState.negotiationFailures);
+
             if (nextHint) {
                 setTimeout(() => {
                     addNPCMessage(nextHint);

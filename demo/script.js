@@ -29,16 +29,32 @@ const goals = {
     legendary_sword: { gold: 500, title: '전설의 검 특가', reward: '전설의 검을 싸게 구매할 기회!' }
 };
 
-// Shop Items
+// Shop Items - Expanded inventory
 const shopItems = {
+    // Weapons
     "1": { name: "낡은 검", price: 100, desc: "기본적인 검. 녹슬었지만 쓸만하다.", keywords: ["낡은검", "낡은", "검1"] },
     "2": { name: "강철 검", price: 500, desc: "튼튼한 강철 검. 전사의 필수품.", keywords: ["강철검", "강철", "검2"] },
-    "3": { name: "전설의 검", price: 2000, desc: "전설로만 전해지는 명검. 세이노의 자랑.", keywords: ["전설의검", "전설검", "전설", "명검"], special: true },
-    "4": { name: "가죽 갑옷", price: 300, desc: "기본 방어구. 가볍고 실용적이다.", keywords: ["가죽갑옷", "가죽", "갑옷1"] },
-    "5": { name: "판금 갑옷", price: 800, desc: "무거운 대신 방어력은 최고.", keywords: ["판금갑옷", "판금", "갑옷2"] },
-    "6": { name: "체력 포션", price: 50, desc: "HP 50 회복. 위급할 때 쓰는 물약.", keywords: ["체력포션", "체력", "빨간포션", "hp포션"] },
-    "7": { name: "마나 포션", price: 50, desc: "MP 50 회복. 마법사의 필수템.", keywords: ["마나포션", "마나", "파란포션", "mp포션"] },
-    "8": { name: "엘릭서", price: 500, desc: "HP/MP 완전 회복. 귀한 물건이다.", keywords: ["엘릭서", "엘릭시르", "만능물약"] }
+    "3": { name: "미스릴 검", price: 1200, desc: "가볍고 날카로운 고급 검.", keywords: ["미스릴검", "미스릴", "검3"] },
+    "4": { name: "전설의 검", price: 2000, desc: "전설로만 전해지는 명검. 세이노의 자랑.", keywords: ["전설의검", "전설검", "전설", "명검"], special: true },
+
+    // Armor
+    "5": { name: "가죽 갑옷", price: 300, desc: "기본 방어구. 가볍고 실용적이다.", keywords: ["가죽갑옷", "가죽", "갑옷1"] },
+    "6": { name: "판금 갑옷", price: 800, desc: "무거운 대신 방어력은 최고.", keywords: ["판금갑옷", "판금", "갑옷2"] },
+    "7": { name: "용 비늘 갑옷", price: 1500, desc: "드래곤의 비늘로 만든 최상급 갑옷.", keywords: ["용비늘", "드래곤", "갑옷3"] },
+
+    // Potions
+    "8": { name: "체력 포션", price: 50, desc: "HP 50 회복. 위급할 때 쓰는 물약.", keywords: ["체력포션", "체력", "빨간포션", "hp포션"] },
+    "9": { name: "마나 포션", price: 50, desc: "MP 50 회복. 마법사의 필수템.", keywords: ["마나포션", "마나", "파란포션", "mp포션"] },
+    "10": { name: "엘릭서", price: 500, desc: "HP/MP 완전 회복. 귀한 물건이다.", keywords: ["엘릭서", "엘릭시르", "만능물약"] },
+
+    // Accessories
+    "11": { name: "행운의 반지", price: 400, desc: "크리티컬 확률 +10%. 운이 좋아진다.", keywords: ["행운반지", "반지", "행운"] },
+    "12": { name: "힘의 목걸이", price: 600, desc: "공격력 +15. 강해지는 느낌.", keywords: ["힘목걸이", "목걸이", "힘"] },
+    "13": { name: "마법사의 로브", price: 900, desc: "마법 데미지 +20%. 마나 회복 속도 증가.", keywords: ["로브", "마법로브", "마법사"] },
+
+    // Special Items
+    "14": { name: "귀환 주문서", price: 200, desc: "즉시 마을로 귀환. 일회용.", keywords: ["귀환", "주문서", "텔레포트"] },
+    "15": { name: "경험치 물약", price: 700, desc: "1시간 동안 경험치 +50%.", keywords: ["경험치", "exp", "물약"] }
 };
 
 // Enhanced Mock AI Responses with emotions
@@ -365,6 +381,7 @@ function updateSaynoEmotion(emotion) {
 function showNegotiationModal(itemNum) {
     const item = shopItems[itemNum];
     gameState.currentNegotiatingItem = itemNum;
+    gameState.isSelling = false; // Set to buying mode
 
     // 전설의 검 특별 처리
     if (item.special && gameState.goalLevel === 'legendary_sword') {
@@ -389,6 +406,34 @@ function showNegotiationModal(itemNum) {
         <div style="text-align: center; margin: 15px 0;">
             <h3>${item.name}</h3>
             <p style="color: #ffd700; font-size: 1.3em;">정가: ${item.price}G</p>
+            <p style="color: rgba(245, 230, 211, 0.8); font-size: 0.9em; margin-top: 10px;">${item.desc}</p>
+        </div>
+    `;
+
+    // 구매 협상 선택지 표시
+    const choicesDiv = document.querySelector('.persuasion-choices');
+    choicesDiv.innerHTML = `
+        <button class="choice-btn polite" onclick="negotiate('polite')">
+            <span class="choice-icon">🙏</span>
+            <span class="choice-title">"부탁드립니다..."</span>
+            <span class="choice-desc">예의바르게 (성공률: ${15 + gameState.buyNegotiationBonus}%)</span>
+        </button>
+        <button class="choice-btn logical" onclick="negotiate('logical')">
+            <span class="choice-icon">🧠</span>
+            <span class="choice-title">"다른 곳은 더 싸던데요"</span>
+            <span class="choice-desc">논리적으로 (성공률: ${25 + gameState.buyNegotiationBonus}%)</span>
+        </button>
+        <button class="choice-btn wisdom" onclick="negotiate('wisdom')">
+            <span class="choice-icon">📖</span>
+            <span class="choice-title">"세이노님 가르침이..."</span>
+            <span class="choice-desc">가르침 인용 (성공률: ${35 + gameState.buyNegotiationBonus}%)</span>
+        </button>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(212, 165, 116, 0.3);">
+            <button class="choice-btn" onclick="buyDirectly('${itemNum}')" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1)); border-color: rgba(76, 175, 80, 0.5);">
+                <span class="choice-icon">💰</span>
+                <span class="choice-title">정가로 바로 구매</span>
+                <span class="choice-desc">협상 없이 ${item.price}G에 구매</span>
+            </button>
         </div>
     `;
 
@@ -447,9 +492,35 @@ function negotiate(strategy) {
             addNPCMessage(response + ` (${discountPercent}% 할인)`);
         } else {
             updateSaynoEmotion('angry');
-            addNPCMessage(getRandomFrom(mockResponses.negotiationFail.angry) + ` 정가 ${item.price}G다.`);
+            addNPCMessage(mockResponses.negotiationFail.angry[Math.floor(Math.random() * mockResponses.negotiationFail.angry.length)]);
         }
-    }, 800);
+    }, 1000);
+}
+
+// Direct purchase without negotiation
+function buyDirectly(itemNum) {
+    const item = shopItems[itemNum];
+
+    if (gameState.gold < item.price) {
+        closeNegotiation();
+        updateSaynoEmotion('angry');
+        addNPCMessage(`돈도 없으면서 무슨 구매? ${item.price}G 가져와.`);
+        return;
+    }
+
+    gameState.gold -= item.price;
+    gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
+    gameState.totalBuys++;
+
+    updateStats();
+    renderShopItems();
+    closeNegotiation();
+
+    updateSaynoEmotion('neutral');
+    addNPCMessage(`${item.name}, ${item.price}G다. 정가로 사니 할 말 없지?`);
+
+    // Check level up
+    checkGoalAchievement(); // Assuming checkLevelUp is actually checkGoalAchievement
 }
 
 function sellItem(itemNum) {

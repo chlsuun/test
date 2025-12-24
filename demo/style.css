@@ -159,21 +159,22 @@ body {
     overflow: hidden;
 }
 
-/* Character Section (Sticky) */
+/* Character Section - Reduced size */
 .character-section {
     flex-shrink: 0;
     background: rgba(44, 36, 22, 0.7);
     border: 2px solid rgba(212, 165, 116, 0.3);
     border-radius: 20px;
-    padding: 20px;
+    padding: 15px;
     backdrop-filter: blur(15px);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    max-width: 250px;
 }
 
 .character-portrait {
     width: 100%;
     aspect-ratio: 1;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
     border: 3px solid var(--primary);
     box-shadow: 0 8px 30px rgba(212, 165, 116, 0.4);

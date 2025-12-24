@@ -98,20 +98,22 @@ const itemCountDisplay = document.getElementById('item-count');
 const goalTitleDisplay = document.getElementById('goal-title');
 const goalProgressFill = document.getElementById('goal-progress');
 const goalTextDisplay = document.getElementById('goal-text');
-const shopItemsContainer = document.getElementById('shop-items');
-const inventorySection = document.getElementById('inventory-section');
-const inventoryItems = document.getElementById('inventory-items');
+const shopGrid = document.getElementById('shop-grid');
+const inventoryGrid = document.getElementById('inventory-grid');
 const negotiationModal = document.getElementById('negotiation-modal');
+const characterPortrait = document.getElementById('character-portrait');
+const emotionIndicator = document.getElementById('emotion-indicator');
+const shopTab = document.getElementById('shop-tab');
+const inventoryTab = document.getElementById('inventory-tab');
 
 // Initialize
-init();
-
 function init() {
-    renderShopItems();
     updateStats();
-    updateSaynoEmotion('neutral');
+    renderShopItems();
     addNPCMessage("어서오십시오... 목표는 간단하다. 실력을 증명해봐. 그럼 내 자랑인 '전설의 검'을 특가에 주지.");
+    updateSaynoEmotion('neutral');
 
+    // Event listeners
     sendBtn.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
@@ -123,7 +125,25 @@ function init() {
             sendMessage();
         });
     });
+
+    // Tab switching
+    shopTab.addEventListener('click', () => {
+        shopTab.classList.add('active');
+        inventoryTab.classList.remove('active');
+        shopGrid.style.display = 'grid';
+        inventoryGrid.style.display = 'none';
+    });
+
+    inventoryTab.addEventListener('click', () => {
+        inventoryTab.classList.add('active');
+        shopTab.classList.remove('active');
+        inventoryGrid.style.display = 'grid';
+        shopGrid.style.display = 'none';
+        renderInventory();
+    });
 }
+
+init();
 
 function sendMessage() {
     const message = userInput.value.trim();
@@ -509,29 +529,24 @@ function addUserMessage(text) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message user';
     messageDiv.innerHTML = `
-        <div class="message-bubble">
-            <div>${text}</div>
-            <div class="message-time">${getCurrentTime()}</div>
-        </div>
-        <div class="message-avatar">👤</div>
+        <div class="message-sender">나</div>
+        <div class="message-text">${text}</div>
     `;
     chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Auto-scroll to bottom
+    chatMessages.parentElement.scrollTop = chatMessages.parentElement.scrollHeight;
 }
 
 function addNPCMessage(text) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message npc';
-    const emotion = saynoEmotions[gameState.saynoEmotion];
     messageDiv.innerHTML = `
-        <div class="message-avatar">${emotion.emoji}</div>
-        <div class="message-bubble">
-            <div>${text}</div>
-            <div class="message-time">${getCurrentTime()}</div>
-        </div>
+        <div class="message-sender">세이노</div>
+        <div class="message-text">${text}</div>
     `;
     chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Auto-scroll to bottom
+    chatMessages.parentElement.scrollTop = chatMessages.parentElement.scrollHeight;
 }
 
 function getCurrentTime() {
@@ -540,7 +555,7 @@ function getCurrentTime() {
 }
 
 function renderShopItems() {
-    shopItemsContainer.innerHTML = '';
+    shopGrid.innerHTML = '';
     for (const [num, item] of Object.entries(shopItems)) {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'shop-item';
@@ -550,47 +565,52 @@ function renderShopItems() {
         }
 
         const hasItem = gameState.inventory[num] > 0;
-        const sellPrice = Math.floor(item.price * 0.7);
+        const sellPrice = Math.floor(item.price * gameState.baseSellPrice);
 
         itemDiv.innerHTML = `
-            <div class="item-name">${num}. ${item.name}${item.special ? ' ⭐' : ''}</div>
-            <div class="item-price">구매: ${item.price}G | 판매: ${sellPrice}G</div>
+            <div class="item-name">${item.name}${item.special ? ' ⭐' : ''}</div>
+            <div class="item-price">${item.price}G</div>
             <div class="item-desc">${item.desc}</div>
             <div class="item-actions">
-                <button class="item-btn buy-btn" onclick="showNegotiationModal('${num}')">할인 요청</button>
-                <button class="item-btn sell-btn" onclick="showSellNegotiationModal('${num}')" ${!hasItem ? 'disabled' : ''}>판매 협상</button>
+                <button class="buy-btn" onclick="showNegotiationModal('${num}')">구매</button>
+                <button class="sell-btn" onclick="showSellNegotiationModal('${num}')" ${!hasItem ? 'disabled' : ''}>판매</button>
             </div>
         `;
-        shopItemsContainer.appendChild(itemDiv);
+        shopGrid.appendChild(itemDiv);
     }
 }
 
-function showShopList() {
-    inventorySection.style.display = 'none';
-    shopItemsContainer.parentElement.style.display = 'block';
-}
-
-function showInventory() {
-    shopItemsContainer.parentElement.style.display = 'none';
-    inventorySection.style.display = 'block';
-
-    inventoryItems.innerHTML = '';
-    if (Object.keys(gameState.inventory).length === 0) {
-        inventoryItems.innerHTML = '<p style="opacity: 0.7;">비어있음</p>';
+function renderInventory() {
+    inventoryGrid.innerHTML = '';
+    if (Object.keys(gameState.inventory).length === 0 || Object.values(gameState.inventory).every(count => count === 0)) {
+        inventoryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.7;">인벤토리가 비어있습니다</p>';
     } else {
         for (const [num, count] of Object.entries(gameState.inventory)) {
             if (count > 0) {
                 const item = shopItems[num];
+                const sellPrice = Math.floor(item.price * gameState.baseSellPrice);
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'shop-item';
+                itemDiv.className = 'inventory-item';
                 itemDiv.innerHTML = `
-                    <div class="item-name">${item.name} x${count}${item.special ? ' ⭐' : ''}</div>
-                    <div class="item-price">${Math.floor(item.price * 0.7)}G (판매가)</div>
+                    <div class="item-name">${item.name}${item.special ? ' ⭐' : ''}</div>
+                    <div class="item-count">보유: ${count}개</div>
+                    <div class="item-price">판매가: ${sellPrice}G</div>
+                    <div class="item-actions">
+                        <button class="sell-btn" onclick="showSellNegotiationModal('${num}')">판매</button>
+                    </div>
                 `;
-                inventoryItems.appendChild(itemDiv);
+                inventoryGrid.appendChild(itemDiv);
             }
         }
     }
+}
+
+function showShopList() {
+    shopTab.click();
+}
+
+function showInventory() {
+    inventoryTab.click();
 }
 
 function quickSell(itemNum) {

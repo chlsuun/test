@@ -6,144 +6,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세이노의 상점 - AI Gaming Agent Demo</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="character-images.css">
     <link rel="stylesheet" href="character-portrait.css">
     <link rel="stylesheet" href="augmentation-styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="npc-info">
-                    <div class="npc-avatar">💼</div>
-                    <div>
-                        <h1>세이노의 상점</h1>
-                        <p class="subtitle">독설적이지만 현명한 상점 주인</p>
-                    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="npc-info">
+                <div class="npc-avatar">💼</div>
+                <div>
+                    <h1>세이노의 상점</h1>
+                    <p class="subtitle">독설적이지만 현명한 상점 주인</p>
                 </div>
-                <div class="player-stats">
-                    <div class="stat">
-                        <span class="stat-label">💰 소지금</span>
-                        <span class="stat-value" id="gold">1000</span>
-                        <span class="stat-unit">G</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">🎒 아이템</span>
-                        <span class="stat-value" id="item-count">0</span>
-                    </div>
-                    <div class="stat goal-stat">
-                        <span class="stat-label">🎯 목표</span>
-                        <span class="stat-value" id="goal-title">견습 상인</span>
-                        <div class="goal-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="goal-progress"></div>
-                            </div>
-                            <span class="progress-text" id="goal-text">1000 / 3000G</span>
+            </div>
+            <div class="player-stats">
+                <div class="stat">
+                    <span class="stat-label">💰 소지금</span>
+                    <span class="stat-value" id="gold">1000</span>
+                    <span class="stat-unit">G</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">🎒 아이템</span>
+                    <span class="stat-value" id="item-count">0</span>
+                </div>
+                <div class="stat goal-stat">
+                    <span class="stat-label">🎯 목표</span>
+                    <span class="stat-value" id="goal-title">견습 상인</span>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="goal-progress"></div>
                         </div>
+                        <span class="progress-text" id="goal-text">1000 / 2000G</span>
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Chat Area -->
-            <div class="chat-container">
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+        <!-- Left Column: Character + Chat -->
+        <div class="left-column">
+            <!-- Character Portrait (Sticky) -->
+            <div class="character-section">
+                <div class="character-portrait" id="character-portrait">
+                    <img src="images/sayno_vase.jpg" alt="Sayno" class="portrait-img" id="portrait-img">
+                </div>
+                <div class="emotion-indicator" id="emotion-indicator">
+                    <span class="emotion-icon">💼</span>
+                    <span class="emotion-label">평온</span>
+                </div>
+            </div>
+
+            <!-- Chat Area (Scrollable) -->
+            <div class="chat-area">
                 <div class="chat-messages" id="chat-messages">
                     <!-- Messages will be added here -->
                 </div>
-                <div class="chat-input-container">
-                    <input type="text" id="user-input" class="chat-input" placeholder="세이노에게 말을 걸어보세요..."
-                        autocomplete="off">
-                    <button id="send-btn" class="send-btn">전송</button>
-                </div>
-                <div class="quick-actions">
-                    <button class="quick-btn" data-action="목록">📋 상품 목록</button>
-                    <button class="quick-btn" data-action="인벤토리">🎒 인벤토리</button>
-                    <button class="quick-btn" data-action="가르침">💡 조언</button>
+            </div>
+        </div>
+
+        <!-- Right Column: Shop Grid -->
+        <div class="right-column">
+            <div class="shop-header">
+                <h2 class="shop-title">상점 목록</h2>
+                <div class="shop-tabs">
+                    <button class="tab-btn active" id="shop-tab">상점</button>
+                    <button class="tab-btn" id="inventory-tab">인벤토리</button>
                 </div>
             </div>
 
-            <!-- Shop Sidebar -->
-            <aside class="shop-sidebar" id="shop-sidebar">
-                <!-- Character Portrait -->
-                <div class="character-portrait-container">
-                    <div class="character-portrait" id="character-portrait">
-                        <img src="images/sayno_vase.jpg" alt="Sayno" class="portrait-img" id="portrait-img">
-                    </div>
-                    <div class="emotion-indicator" id="emotion-indicator">
-                        <span class="emotion-icon">💼</span>
-                        <span class="emotion-label">평온</span>
-                    </div>
-                </div>
+            <!-- Shop Items Grid -->
+            <div class="shop-grid" id="shop-grid">
+                <!-- Shop items will be rendered here -->
+            </div>
 
-                <h2 class="sidebar-title">상점 목록</h2>
-                <div class="shop-items" id="shop-items">
-                    <!-- Shop items will be rendered here -->
-                </div>
-                <div class="inventory-section" id="inventory-section" style="display: none;">
-                    <h3>내 인벤토리</h3>
-                    <div id="inventory-items">
-                        <!-- Inventory items will be rendered here -->
-                    </div>
-                </div>
+            <!-- Inventory Grid (Hidden by default) -->
+            <div class="inventory-grid" id="inventory-grid" style="display: none;">
+                <!-- Inventory items will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Area (Fixed Bottom) -->
+    <div class="input-area">
+        <input type="text" id="user-input" class="chat-input" placeholder="세이노에게 말을 걸어보세요..." autocomplete="off">
+        <button id="send-btn" class="send-btn">전송</button>
+        <div class="quick-actions">
+            <button class="quick-btn" data-action="목록">📋 상품 목록</button>
+            <button class="quick-btn" data-action="인벤토리">🎒 인벤토리</button>
+            <button class="quick-btn" data-action="가르침">💡 조언</button>
         </div>
     </div>
 
     <!-- Negotiation Modal -->
-    <div class="modal" id="negotiation-modal">
-        <div class="modal-content">
-            <h2>💬 할인 협상</h2>
+    <div id="negotiation-modal" class="modal">
+        <div class="modal-content negotiation-modal">
+            <h2>가격 협상</h2>
             <div id="negotiation-item-info"></div>
-            <p class="modal-desc">어떻게 세이노를 설득하시겠습니까?</p>
             <div class="persuasion-choices">
-                <button class="choice-btn polite" onclick="negotiate('polite')">
-                    <span class="choice-icon">🙏</span>
-                    <span class="choice-title">"부탁드립니다"</span>
-                    <span class="choice-desc">예의바르게 (성공률: 낮음)</span>
-                </button>
-                <button class="choice-btn logical" onclick="negotiate('logical')">
-                    <span class="choice-icon">🧠</span>
-                    <span class="choice-title">"다른 곳은 더 싸던데요"</span>
-                    <span class="choice-desc">논리적으로 (성공률: 중간)</span>
-                </button>
-                <button class="choice-btn wisdom" onclick="negotiate('wisdom')">
-                    <span class="choice-icon">📖</span>
-                    <span class="choice-title">"세이노님 가르침이..."</span>
-                    <span class="choice-desc">가르침 인용 (성공률: 높음)</span>
-                </button>
+                <!-- Choices will be dynamically added -->
             </div>
             <button class="modal-close" onclick="closeNegotiation()">취소</button>
         </div>
     </div>
 
-    <!-- Augmentation Modal -->
-    <div class="modal" id="augmentation-modal">
-        <div class="modal-content augmentation-content">
-            <h2>🎉 레벨업!</h2>
-            <p class="level-up-message" id="level-up-message"></p>
-            <p class="modal-desc">증강을 선택하세요 (1개만 선택 가능)</p>
-            <div class="augmentation-choices" id="augmentation-choices">
-                <!-- Augmentation cards will be inserted here -->
+    <!-- Sell Negotiation Modal -->
+    <div id="sell-negotiation-modal" class="modal">
+        <div class="modal-content negotiation-modal">
+            <h2>판매 협상</h2>
+            <div id="sell-negotiation-item-info"></div>
+            <div class="sell-persuasion-choices">
+                <!-- Choices will be dynamically added -->
             </div>
+            <button class="modal-close" onclick="closeSellNegotiation()">취소</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>💡 Tip: 세이노와 대화하고, 할인받아 물건 사고, 비싸게 팔아서 전설의 검을 획득하세요!</p>
-        <p class="github-link">
-            <a href="https://github.com/chlsuun/test" target="_blank">
-                🔗 GitHub Repository
-            </a>
-            |
-            <a href="../index.html">
-                📊 Presentation
-            </a>
-        </p>
-    </footer>
+    <!-- Augmentation Modal -->
+    <div id="augmentation-modal" class="modal">
+        <div class="modal-content augmentation-modal">
+            <h2>🎉 레벨 업!</h2>
+            <p class="augmentation-desc">세이노가 너를 인정하기 시작했다. 하나를 선택해라.</p>
+            <div id="augmentation-choices" class="augmentation-choices">
+                <!-- Augmentation cards will be added here -->
+            </div>
+        </div>
     </div>
 
     <script src="augmentations.js"></script>

@@ -1,4 +1,4 @@
-// Game State
+﻿// Game State
 const gameState = {
     gold: 1000,
     inventory: {},
@@ -14,15 +14,14 @@ const gameState = {
     saynoEmotion: 'neutral',
     isSelling: false,
 
-    // === ?�판 ?�스??(Reputation System) ===
-    reputation: 0,              // ?�인 ?�판 (경험�?
-    reputationLevel: 1,         // ?�판 ?�벨
+    // === ?됲뙋 ?쒖뒪??(Reputation System) ===
+    reputation: 0,              // ?곸씤 ?됲뙋 (寃쏀뿕移?
+    reputationLevel: 1,         // ?됲뙋 ?덈꺼
 
-    // === ?�상 ?�스?�리 (Anti-Repetition) ===
-    negotiationHistory: [],     // ?�용???�상 기록
+    // === ?묒긽 ?덉뒪?좊━ (Anti-Repetition) ===
+    negotiationHistory: [],     // ?ъ슜???묒긽 湲곕줉
 
-    // 증강 ?�스??
-    augmentations: [],
+    // 利앷컯 ?쒖뒪??    augmentations: [],
     sellNegotiationBonus: 0,
     buyNegotiationBonus: 0,
     sellPriceBonus: 0,
@@ -32,85 +31,85 @@ const gameState = {
     leveledUp: false
 };
 
-// Goals - 최종 목표: ?�설??검 ?�게 구매!
+// Goals - 理쒖쥌 紐⑺몴: ?꾩꽕??寃 ?멸쾶 援щℓ!
 const goals = {
-    beginner: { gold: 2000, title: '견습 ?�인', reward: '?�이?��? 조금 ?�정?? },
-    intermediate: { gold: 4000, title: '?�련 ?�인', reward: '?�이?��? 존중?�기 ?�작' },
-    legendary_sword: { gold: 500, title: '?�설??검 ?��?', reward: '?�설??검???�게 구매??기회!' }
+    beginner: { gold: 2000, title: '寃ъ뒿 ?곸씤', reward: '?몄씠?멸? 議곌툑 ?몄젙?? },
+    intermediate: { gold: 4000, title: '?숇젴 ?곸씤', reward: '?몄씠?멸? 議댁쨷?섍린 ?쒖옉' },
+    legendary_sword: { gold: 500, title: '?꾩꽕??寃 ?밴?', reward: '?꾩꽕??寃???멸쾶 援щℓ??湲고쉶!' }
 };
 
 // Shop Items - Expanded inventory
 const shopItems = {
     // Weapons
-    "1": { name: "?��? 검", price: 100, desc: "기본?�인 검. ?�슬?��?�??�만?�다.", keywords: ["?��?검", "?��?", "검1"] },
-    "2": { name: "강철 검", price: 500, desc: "?�튼??강철 검. ?�사???�수??", keywords: ["강철검", "강철", "검2"] },
-    "3": { name: "미스�?검", price: 1200, desc: "가볍고 ?�카로운 고급 검.", keywords: ["미스릴�?", "미스�?, "검3"] },
-    "4": { name: "?�설??검", price: 2000, desc: "?�설로만 ?�해지??명�?. ?�이?�의 ?�랑.", keywords: ["?�설?��?", "?�설검", "?�설", "명�?"], special: true },
+    "1": { name: "?≪? 寃", price: 100, desc: "湲곕낯?곸씤 寃. ?뱀뒳?덉?留??몃쭔?섎떎.", keywords: ["?≪?寃", "?≪?", "寃1"] },
+    "2": { name: "媛뺤쿋 寃", price: 500, desc: "?쇳듉??媛뺤쿋 寃. ?꾩궗???꾩닔??", keywords: ["媛뺤쿋寃", "媛뺤쿋", "寃2"] },
+    "3": { name: "誘몄뒪由?寃", price: 1200, desc: "媛蹂띻퀬 ?좎뭅濡쒖슫 怨좉툒 寃.", keywords: ["誘몄뒪由닿?", "誘몄뒪由?, "寃3"] },
+    "4": { name: "?꾩꽕??寃", price: 2000, desc: "?꾩꽕濡쒕쭔 ?꾪빐吏??紐낃?. ?몄씠?몄쓽 ?먮옉.", keywords: ["?꾩꽕?섍?", "?꾩꽕寃", "?꾩꽕", "紐낃?"], special: true },
 
     // Armor
-    "5": { name: "가�?갑옷", price: 300, desc: "기본 방어�? 가볍고 ?�용?�이??", keywords: ["가죽갑??, "가�?, "갑옷1"] },
-    "6": { name: "?�금 갑옷", price: 800, desc: "무거???�??방어?��? 최고.", keywords: ["?�금갑옷", "?�금", "갑옷2"] },
-    "7": { name: "??비늘 갑옷", price: 1500, desc: "?�래곤의 비늘�?만든 최상�?갑옷.", keywords: ["?�비??, "?�래�?, "갑옷3"] },
+    "5": { name: "媛二?媛묒샆", price: 300, desc: "湲곕낯 諛⑹뼱援? 媛蹂띻퀬 ?ㅼ슜?곸씠??", keywords: ["媛二쎄컩??, "媛二?, "媛묒샆1"] },
+    "6": { name: "?먭툑 媛묒샆", price: 800, desc: "臾닿굅?????諛⑹뼱?μ? 理쒓퀬.", keywords: ["?먭툑媛묒샆", "?먭툑", "媛묒샆2"] },
+    "7": { name: "??鍮꾨뒛 媛묒샆", price: 1500, desc: "?쒕옒怨ㅼ쓽 鍮꾨뒛濡?留뚮뱺 理쒖긽湲?媛묒샆.", keywords: ["?⑸퉬??, "?쒕옒怨?, "媛묒샆3"] },
 
     // Potions
-    "8": { name: "체력 ?�션", price: 50, desc: "HP 50 ?�복. ?�급?????�는 물약.", keywords: ["체력?�션", "체력", "빨간?�션", "hp?�션"] },
-    "9": { name: "마나 ?�션", price: 50, desc: "MP 50 ?�복. 마법?�의 ?�수??", keywords: ["마나?�션", "마나", "?��??�션", "mp?�션"] },
-    "10": { name: "?�릭??, price: 500, desc: "HP/MP ?�전 ?�복. 귀??물건?�다.", keywords: ["?�릭??, "?�릭?�르", "만능물약"] },
+    "8": { name: "泥대젰 ?ъ뀡", price: 50, desc: "HP 50 ?뚮났. ?꾧툒?????곕뒗 臾쇱빟.", keywords: ["泥대젰?ъ뀡", "泥대젰", "鍮④컙?ъ뀡", "hp?ъ뀡"] },
+    "9": { name: "留덈굹 ?ъ뀡", price: 50, desc: "MP 50 ?뚮났. 留덈쾿?ъ쓽 ?꾩닔??", keywords: ["留덈굹?ъ뀡", "留덈굹", "?뚮??ъ뀡", "mp?ъ뀡"] },
+    "10": { name: "?섎┃??, price: 500, desc: "HP/MP ?꾩쟾 ?뚮났. 洹??臾쇨굔?대떎.", keywords: ["?섎┃??, "?섎┃?쒕Ⅴ", "留뚮뒫臾쇱빟"] },
 
     // Accessories
-    "11": { name: "?�운??반�?", price: 400, desc: "?�리?�컬 ?�률 +10%. ?�이 좋아진다.", keywords: ["?�운반�?", "반�?", "?�운"] },
-    "12": { name: "?�의 목걸??, price: 600, desc: "공격??+15. 강해지???�낌.", keywords: ["?�목걸이", "목걸??, "??] },
-    "13": { name: "마법?�의 로브", price: 900, desc: "마법 ?��?지 +20%. 마나 ?�복 ?�도 증�?.", keywords: ["로브", "마법로브", "마법??] },
+    "11": { name: "?됱슫??諛섏?", price: 400, desc: "?щ━?곗뺄 ?뺣쪧 +10%. ?댁씠 醫뗭븘吏꾨떎.", keywords: ["?됱슫諛섏?", "諛섏?", "?됱슫"] },
+    "12": { name: "?섏쓽 紐⑷구??, price: 600, desc: "怨듦꺽??+15. 媛뺥빐吏???먮굦.", keywords: ["?섎ぉ嫄몄씠", "紐⑷구??, "??] },
+    "13": { name: "留덈쾿?ъ쓽 濡쒕툕", price: 900, desc: "留덈쾿 ?곕?吏 +20%. 留덈굹 ?뚮났 ?띾룄 利앷?.", keywords: ["濡쒕툕", "留덈쾿濡쒕툕", "留덈쾿??] },
 
     // Special Items
-    "14": { name: "귀??주문??, price: 200, desc: "즉시 마을�?귀?? ?�회??", keywords: ["귀??, "주문??, "?�레?�트"] },
-    "15": { name: "경험�?물약", price: 700, desc: "1?�간 ?�안 경험�?+50%.", keywords: ["경험�?, "exp", "물약"] }
+    "14": { name: "洹??二쇰Ц??, price: 200, desc: "利됱떆 留덉쓣濡?洹?? ?쇳쉶??", keywords: ["洹??, "二쇰Ц??, "?붾젅?ы듃"] },
+    "15": { name: "寃쏀뿕移?臾쇱빟", price: 700, desc: "1?쒓컙 ?숈븞 寃쏀뿕移?+50%.", keywords: ["寃쏀뿕移?, "exp", "臾쇱빟"] }
 };
 
 // Enhanced Mock AI Responses with emotions
 const mockResponses = {
     greeting: {
-        neutral: ["?�서?�십?�오... ?�니, 그냥 구경꾼인가?", "?�님?�라???�야 ?�사�?받�?. �??�하??"],
-        pleased: ["?? ?�시 ?�군. ?�사가 ???�나?", "보는 ?�이 ?�는 ?�님?�군."]
+        neutral: ["?댁꽌?ㅼ떗?쒖삤... ?꾨땲, 洹몃깷 援ш꼍袁쇱씤媛?", "?먮떂?대씪???쇱빞 ?몄궗瑜?諛쏆?. 萸??먰븯??"],
+        pleased: ["?? ?ㅼ떆 ?붽뎔. ?μ궗媛 ???섎굹?", "蹂대뒗 ?덉씠 ?덈뒗 ?먮떂?닿뎔."]
     },
     smallTalk: {
-        weather: ["?�씨? 그딴 �??�경 ???�간???�이??벌어.", "비�? ?�든 ?�이 ?�든, ?�사??계속?�다."],
-        life: ["?�생?� ?�순?�다. ?�돈 ?�끼�? ?�돈 벌고. 그게 ?�야.", "???�으�?꿈도 �?꾼다. ?�실?��?."],
-        business: ["?�사? ?�값 주는 ?�한?�만 ?�다. 간단??", "?�사???�고 ?�이??�??�니?? 가치�? ?�는 게임?�다."],
-        wisdom: ["?�돈???�끼지 ?�는 ?��? ?��? ?�돈??�?쥔다.", "?�들??커피 마실 ???�자?�라. 그게 부???�는 길이??", "?�을 버는 �?기술?�고, 지?�는 �??�술?�다."]
+        weather: ["?좎뵪? 洹몃뵶 嫄??좉꼍 ???쒓컙???덉씠??踰뚯뼱.", "鍮꾧? ?ㅻ뱺 ?덉씠 ?ㅻ뱺, ?μ궗??怨꾩냽?쒕떎."],
+        life: ["?몄깮? ?⑥닚?섎떎. ?쇰룉 ?꾨겮怨? ?곕룉 踰뚭퀬. 洹멸쾶 ?ㅼ빞.", "???놁쑝硫?轅덈룄 紐?袁쇰떎. ?꾩떎?댁?."],
+        business: ["?μ궗? ?쒓컪 二쇰뒗 ?덊븳?뚮쭔 ?먮떎. 媛꾨떒??", "?μ궗???띻퀬 ?띿씠??寃??꾨땲?? 媛移섎? ?꾨뒗 寃뚯엫?대떎."],
+        wisdom: ["?쇰룉???꾨겮吏 ?딅뒗 ?덉? ?덈? ?곕룉??紐?伊붾떎.", "?⑤뱾??而ㅽ뵾 留덉떎 ???ъ옄?대씪. 洹멸쾶 遺???섎뒗 湲몄씠??", "?덉쓣 踰꾨뒗 嫄?湲곗닠?닿퀬, 吏?ㅻ뒗 嫄??덉닠?대떎."]
     },
     negotiationSuccess: {
-        neutral: ["...?�법?�군. {}G???�긴??", "?? ??말에 ?�리???�다. {}G??"],
-        pleased: ["좋아좋아! ?�런 ?�님???�어???�사가 ?�밌지. {}G???�리지."]
+        neutral: ["...?쒕쾿?닿뎔. {}G???섍릿??", "?? ??留먯뿉 ?쇰━???덈떎. {}G??"],
+        pleased: ["醫뗭븘醫뗭븘! ?대윴 ?먮떂???덉뼱???μ궗媛 ?щ컡吏. {}G???쒕━吏."]
     },
     negotiationFail: {
-        angry: ["가?�이 벼슬?�냐? 가격�? 그�?로야!", "?�상??구걸�?착각?��? 마라!", "??물건?� ?�값???�는 ?�람?�테�??�다!"]
+        angry: ["媛?쒖씠 踰쇱뒳?대깘? 媛寃⑹? 洹몃?濡쒖빞!", "?묒긽??援ш구濡?李⑷컖?섏? 留덈씪!", "??臾쇨굔? ?쒓컪???꾨뒗 ?щ엺?쒗뀒留??먮떎!"]
     },
     goalAchieved: {
-        beginner: "...?�법?�군. ???�력???�정?�다. 견습?� 졸업?�다.",
-        intermediate: "?�?�하�? ?�정?�면 ?�련 ?�인?��?. 벌써 ?�설??검???�에 ?�어?�나?",
-        legendary_sword: "?�� 축하?�다! ?��? 진정???�인?�을 증명?�어. ?�별??.. ?�설??검??500G???�기지. ?�건 ???�력???�????존경???�시??"
+        beginner: "...?쒕쾿?닿뎔. ???ㅻ젰???몄젙?쒕떎. 寃ъ뒿? 議몄뾽?대떎.",
+        intermediate: "??⑦븯援? ?댁젙?꾨㈃ ?숇젴 ?곸씤?댁?. 踰뚯뜥 ?꾩꽕??寃???덉뿉 ?ㅼ뼱?ㅻ굹?",
+        legendary_sword: "?럦 異뺥븯?쒕떎! ?ㅺ? 吏꾩젙???곸씤?꾩쓣 利앸챸?덉뼱. ?밸퀎??.. ?꾩꽕??寃??500G???섍린吏. ?닿굔 ???ㅻ젰???????議닿꼍???쒖떆??"
     },
-    compliment: ["?�한???��????�용?�어.", "�?��?� ?�이 ????"],
-    insult: ["무�????? ???��?.", "?�사 ???�냐? 꺼져."],
-    goodbye: ["그래, 조심?�서 가??", "?�음???????�고 ?�."]
+    compliment: ["?섑븳???꾨????뚯슜?놁뼱.", "移?갔? ?덉씠 ????"],
+    insult: ["臾대????? ???섍?.", "?μ궗 ???섎깘? 爰쇱졇."],
+    goodbye: ["洹몃옒, 議곗떖?댁꽌 媛??", "?ㅼ쓬???????ㅺ퀬 ?."]
 };
 
 // Sayno emotions with actual images
 const saynoEmotions = {
     neutral: {
-        emoji: "?��",
+        emoji: "?뮳",
         image: "images/sayno_vase.jpg",
         class: "neutral"
     },
     angry: {
-        emoji: "?��",
+        emoji: "?삝",
         image: "images/sayno_mad.jpg",
         class: "angry"
     },
     pleased: {
-        emoji: "?��",
-        image: "images/sayno_vase.jpg", // 기본 ?��?지 ?�용
+        emoji: "?삃",
+        image: "images/sayno_vase.jpg", // 湲곕낯 ?대?吏 ?ъ슜
         class: "pleased"
     }
 };
@@ -136,7 +135,7 @@ const inventoryTab = document.getElementById('inventory-tab');
 function init() {
     updateStats();
     renderShopItems();
-    addNPCMessage("?�서?�십?�오... 목표??간단?�다. ?�력??증명?�봐. 그럼 ???�랑??'?�설??검'???��???주�?.");
+    addNPCMessage("?댁꽌?ㅼ떗?쒖삤... 紐⑺몴??媛꾨떒?섎떎. ?ㅻ젰??利앸챸?대킄. 洹몃읆 ???먮옉??'?꾩꽕??寃'???밴???二쇱?.");
     updateSaynoEmotion('neutral');
 
     // Event listeners
@@ -189,164 +188,160 @@ function processMessage(message) {
     const lowerMsg = message.toLowerCase();
     const cleanMsg = message.replace(/\s/g, '').toLowerCase();
 
-    // 목록 보기 - ?�장???�워??
-    if (lowerMsg.includes('목록') || lowerMsg.includes('리스??) || lowerMsg.includes('?�품') ||
-        lowerMsg.includes('뭐파') || lowerMsg.includes('뭐있') ||
-        lowerMsg.includes('물건') || lowerMsg.includes('?�이??)) {
+    // 紐⑸줉 蹂닿린 - ?뺤옣???ㅼ썙??    if (lowerMsg.includes('紐⑸줉') || lowerMsg.includes('由ъ뒪??) || lowerMsg.includes('?곹뭹') ||
+        lowerMsg.includes('萸먰뙆') || lowerMsg.includes('萸먯엳') ||
+        lowerMsg.includes('臾쇨굔') || lowerMsg.includes('?꾩씠??)) {
         showShopList();
         updateSaynoEmotion('neutral');
-        return "물건?�이?? '?�인 ?�청'???�러???�씨름해�? ?�진 ?�을 거야.";
+        return "臾쇨굔?ㅼ씠?? '?좎씤 ?붿껌'???뚮윭???낆뵪由꾪빐遊? ?쎌쭊 ?딆쓣 嫄곗빞.";
     }
 
-    // ?�벤?�리 - ?�장
-    if (lowerMsg.includes('?�벤?�리') || lowerMsg.includes('가�?) || lowerMsg.includes('?��???) ||
-        lowerMsg.includes('?�꺼') || lowerMsg.includes('?�거')) {
+    // ?몃깽?좊━ - ?뺤옣
+    if (lowerMsg.includes('?몃깽?좊━') || lowerMsg.includes('媛諛?) || lowerMsg.includes('?뚯???) ||
+        lowerMsg.includes('?닿볼') || lowerMsg.includes('?곌굅')) {
         showInventory();
-        return "???��??�이?? ??�??�으�??�아.";
+        return "???뚯??덉씠?? ??嫄??덉쑝硫??붿븘.";
     }
 
-    // 목표 ?�인 - ?�장
-    if (lowerMsg.includes('목표') || (lowerMsg.includes('?�마') && (lowerMsg.includes('�?) || lowerMsg.includes('?�요')))) {
+    // 紐⑺몴 ?뺤씤 - ?뺤옣
+    if (lowerMsg.includes('紐⑺몴') || (lowerMsg.includes('?쇰쭏') && (lowerMsg.includes('紐?) || lowerMsg.includes('?꾩슂')))) {
         const currentGoal = goals[gameState.goalLevel];
         const remaining = currentGoal.gold - gameState.gold;
-        return `?�재 목표: ${currentGoal.title} (${currentGoal.gold}G). 지�?${gameState.gold}G, ${remaining}G ???�요??`;
+        return `?꾩옱 紐⑺몴: ${currentGoal.title} (${currentGoal.gold}G). 吏湲?${gameState.gold}G, ${remaining}G ???꾩슂??`;
     }
 
-    // ?��?�??�인
-    if ((lowerMsg.includes('?��?�?) || lowerMsg.includes('?�돈') || (lowerMsg.includes('?�마') && lowerMsg.includes('??))) &&
-        !lowerMsg.includes('목표')) {
-        return `${gameState.gold}G ?�다. 목표까�? ${goals[gameState.goalLevel].gold - gameState.gold}G ?�았??`;
+    // ?뚯?湲??뺤씤
+    if ((lowerMsg.includes('?뚯?湲?) || lowerMsg.includes('?대룉') || (lowerMsg.includes('?쇰쭏') && lowerMsg.includes('??))) &&
+        !lowerMsg.includes('紐⑺몴')) {
+        return `${gameState.gold}G ?덈떎. 紐⑺몴源뚯? ${goals[gameState.goalLevel].gold - gameState.gold}G ?⑥븯??`;
     }
 
-    // ?�설??검
-    if (lowerMsg.includes('?�설') || cleanMsg.includes('?�설?��?')) {
+    // ?꾩꽕??寃
+    if (lowerMsg.includes('?꾩꽕') || cleanMsg.includes('?꾩꽕?섍?')) {
         if (gameState.goalLevel !== 'legendary_sword') {
             updateSaynoEmotion('neutral');
-            return "?�설??검? ?? ?�직 ?�러. 먼�? ?�력부??증명??";
+            return "?꾩꽕??寃? ?? ?꾩쭅 ?쇰윭. 癒쇱? ?ㅻ젰遺??利앸챸??";
         }
     }
 
-    // ?��?�?
-    if (lowerMsg.includes('?��?') || lowerMsg.includes('?�떻�?) || lowerMsg.includes('?�는�?)) {
-        return "간단?�다. 1) 목록 보기 2) ?�인 ?�청?�로 ?�게 ?�기 3) 비싸�??�기 4) ??모으�?";
+    // ?꾩?留?    if (lowerMsg.includes('?꾩?') || lowerMsg.includes('?대뼸寃?) || lowerMsg.includes('?섎뒗踰?)) {
+        return "媛꾨떒?섎떎. 1) 紐⑸줉 蹂닿린 2) ?좎씤 ?붿껌?쇰줈 ?멸쾶 ?ш린 3) 鍮꾩떥寃??붽린 4) ??紐⑥쑝湲?";
     }
 
-    // ?�쁜�?
-    if (lowerMsg.includes('짜증') || lowerMsg.includes('?�어') || lowerMsg.includes('?�빠') ||
-        lowerMsg.includes('별로') || lowerMsg.includes('바보')) {
+    // ?섏걶留?    if (lowerMsg.includes('吏쒖쬆') || lowerMsg.includes('?レ뼱') || lowerMsg.includes('?섎튌') ||
+        lowerMsg.includes('蹂꾨줈') || lowerMsg.includes('諛붾낫')) {
         updateSaynoEmotion('angry');
-        return "무�????? ??꺼져??";
+        return "臾대????? ??爰쇱졇??";
     }
 
-    // �?��
-    if (lowerMsg.includes('멋져') || lowerMsg.includes('?�??) || lowerMsg.includes('존경') ||
-        lowerMsg.includes('최고') || lowerMsg.includes('좋아')) {
+    // 移?갔
+    if (lowerMsg.includes('硫뗭졇') || lowerMsg.includes('???) || lowerMsg.includes('議닿꼍') ||
+        lowerMsg.includes('理쒓퀬') || lowerMsg.includes('醫뗭븘')) {
         updateSaynoEmotion('neutral');
-        return "?��????�용?�어. ?�사???�력?��?.";
+        return "?꾨????뚯슜?놁뼱. ?μ궗???ㅻ젰?댁?.";
     }
 
-    // 감사
-    if (lowerMsg.includes('감사') || lowerMsg.includes('고마')) {
+    // 媛먯궗
+    if (lowerMsg.includes('媛먯궗') || lowerMsg.includes('怨좊쭏')) {
         updateSaynoEmotion('neutral');
-        return "감사???�이 ???? ?�음????벌어?�.";
+        return "媛먯궗???덉씠 ???? ?ㅼ쓬????踰뚯뼱?.";
     }
 
-    // ?�씨
-    if (lowerMsg.includes('?�씨') || lowerMsg.includes('�?) || lowerMsg.includes('??) || lowerMsg.includes('추워')) {
+    // ?좎뵪
+    if (lowerMsg.includes('?좎뵪') || lowerMsg.includes('鍮?) || lowerMsg.includes('??) || lowerMsg.includes('異붿썙')) {
         updateSaynoEmotion('neutral');
         return getRandomFrom(mockResponses.smallTalk.weather);
     }
 
-    // 조언/가르침
-    if (lowerMsg.includes('조언') || lowerMsg.includes('가르침') || lowerMsg.includes('?�생') ||
-        lowerMsg.includes('지??) || lowerMsg.includes('비법') || lowerMsg.includes('?�공')) {
+    // 議곗뼵/媛瑜댁묠
+    if (lowerMsg.includes('議곗뼵') || lowerMsg.includes('媛瑜댁묠') || lowerMsg.includes('?몄깮') ||
+        lowerMsg.includes('吏??) || lowerMsg.includes('鍮꾨쾿') || lowerMsg.includes('?깃났')) {
         updateSaynoEmotion('pleased');
         return getRandomFrom(mockResponses.smallTalk.wisdom);
     }
 
-    // ?�사
-    if (lowerMsg.includes('?�사') || lowerMsg.includes('?�업') || lowerMsg.includes('?�버')) {
+    // ?μ궗
+    if (lowerMsg.includes('?μ궗') || lowerMsg.includes('?ъ뾽') || lowerMsg.includes('?덈쾭')) {
         updateSaynoEmotion('neutral');
         return getRandomFrom(mockResponses.smallTalk.business);
     }
 
-    // ?�매
-    if (lowerMsg.includes('?�매') || lowerMsg.includes('?�게') || lowerMsg.includes('?�아') ||
-        (lowerMsg.includes('??) && !lowerMsg.includes('뭐팔'))) {
+    // ?먮ℓ
+    if (lowerMsg.includes('?먮ℓ') || lowerMsg.includes('?붽쾶') || lowerMsg.includes('?붿븘') ||
+        (lowerMsg.includes('??) && !lowerMsg.includes('萸먰뙏'))) {
         const itemNum = findItemNumber(message);
         if (itemNum && gameState.inventory[itemNum]) {
             return sellItem(itemNum);
         }
 
-        // ?�름?�로 찾기
+        // ?대쫫?쇰줈 李얘린
         for (const [num, item] of Object.entries(shopItems)) {
             if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
                 item.keywords.some(kw => cleanMsg.includes(kw))) {
                 if (gameState.inventory[num] && gameState.inventory[num] > 0) {
                     return sellItem(num);
                 }
-                return "그걸 가지�??��????�잖??";
+                return "洹멸구 媛吏怨??덉????딆옏??";
             }
         }
-        return "�??�겠?�는 거야? 명확?�게 말해.";
+        return "萸??붽쿋?ㅻ뒗 嫄곗빞? 紐낇솗?섍쾶 留먰빐.";
     }
 
-    // 구매
-    const purchaseWords = ['구매', '?�게', '?�고', '주세??, '�?, 'buy', '구입'];
+    // 援щℓ
+    const purchaseWords = ['援щℓ', '?닿쾶', '?ш퀬', '二쇱꽭??, '以?, 'buy', '援ъ엯'];
     if (purchaseWords.some(w => lowerMsg.includes(w))) {
         const itemNum = findItemNumber(message);
         if (itemNum) {
             updateSaynoEmotion('neutral');
-            return `${shopItems[itemNum].name}? ?�인 받고 ?�으�?'?�인 ?�청' 버튼 ?�러.`;
+            return `${shopItems[itemNum].name}? ?좎씤 諛쏄퀬 ?띠쑝硫?'?좎씤 ?붿껌' 踰꾪듉 ?뚮윭.`;
         }
 
-        // ?�름?�로
+        // ?대쫫?쇰줈
         for (const [num, item] of Object.entries(shopItems)) {
             if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
                 item.keywords.some(kw => cleanMsg.includes(kw))) {
-                return `${item.name}? 목록?�서 '?�인 ?�청' ?�러�?`;
+                return `${item.name}? 紐⑸줉?먯꽌 '?좎씤 ?붿껌' ?뚮윭遊?`;
             }
         }
-        return "�??�겠?�는 거야? '목록' 쳐서 보고 말해.";
+        return "萸??ш쿋?ㅻ뒗 嫄곗빞? '紐⑸줉' 爾먯꽌 蹂닿퀬 留먰빐.";
     }
 
-    // 가�?
-    if (lowerMsg.includes('가�?) || lowerMsg.includes('?�마')) {
+    // 媛寃?    if (lowerMsg.includes('媛寃?) || lowerMsg.includes('?쇰쭏')) {
         for (const [num, item] of Object.entries(shopItems)) {
             if (cleanMsg.includes(item.name.replace(/\s/g, '').toLowerCase()) ||
                 item.keywords.some(kw => cleanMsg.includes(kw))) {
                 const sellPrice = Math.floor(item.price * 0.7);
-                return `${item.name}? 구매??${item.price}G, ?�매??${sellPrice}G.`;
+                return `${item.name}? 援щℓ??${item.price}G, ?먮ℓ??${sellPrice}G.`;
             }
         }
-        return "'목록' 쳐서 �? ???�어.";
+        return "'紐⑸줉' 爾먯꽌 遊? ???덉뼱.";
     }
 
-    // ?�별
-    if ((lowerMsg.includes('?�녕') && lowerMsg.includes('??)) || lowerMsg.includes('bye') || lowerMsg.includes('그만')) {
+    // ?묐퀎
+    if ((lowerMsg.includes('?덈뀞') && lowerMsg.includes('??)) || lowerMsg.includes('bye') || lowerMsg.includes('洹몃쭔')) {
         updateSaynoEmotion('neutral');
         return getRandomFrom(mockResponses.goodbye);
     }
 
-    // ?�사
-    if (lowerMsg.includes('?�녕') || lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('반�?')) {
+    // ?몄궗
+    if (lowerMsg.includes('?덈뀞') || lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('諛섍?')) {
         const emotion = gameState.totalBuys > 3 ? 'pleased' : 'neutral';
         updateSaynoEmotion(emotion);
         return getRandomFrom(mockResponses.greeting[emotion]);
     }
 
-    // ?�기?�개
-    if (lowerMsg.includes('?�구') || lowerMsg.includes('?�름')) {
+    // ?먭린?뚭컻
+    if (lowerMsg.includes('?꾧뎄') || lowerMsg.includes('?대쫫')) {
         updateSaynoEmotion('neutral');
-        return "?? ?�이?�다. ???�점 주인. ?�데?�는 질문 말고 ?�사????";
+        return "?? ?몄씠?몃떎. ???곸젏 二쇱씤. ?몃뜲?녿뒗 吏덈Ц 留먭퀬 ?μ궗????";
     }
 
-    // 기본
+    // 湲곕낯
     updateSaynoEmotion('neutral');
     const defaults = [
-        "...무슨 말이?? 명확?�게 ?�기??",
-        "?�해가 ???�는?? '목록', '?�벤?�리', '조언' 같�? �??�봐.",
-        "?�사??거야 �?거야? ?�실????"
+        "...臾댁뒯 留먯씠?? 紐낇솗?섍쾶 ?섍린??",
+        "?댄빐媛 ???섎뒗?? '紐⑸줉', '?몃깽?좊━', '議곗뼵' 媛숈? 留??대킄.",
+        "?μ궗??嫄곗빞 留?嫄곗빞? ?뺤떎????"
     ];
     return getRandomFrom(defaults);
 }
@@ -372,9 +367,9 @@ function updateSaynoEmotion(emotion) {
 
         // Update emotion label
         const emotionLabels = {
-            neutral: { icon: '?��', label: '?�온' },
-            angry: { icon: '?��', label: '?�남' },
-            pleased: { icon: '?��', label: '만족' }
+            neutral: { icon: '?뮳', label: '?됱삩' },
+            angry: { icon: '?삝', label: '?붾궓' },
+            pleased: { icon: '?삃', label: '留뚯”' }
         };
 
         const emotionInfo = emotionLabels[emotion];
@@ -393,9 +388,9 @@ function showNegotiationModal(itemNum) {
     gameState.currentNegotiatingItem = itemNum;
     gameState.isSelling = false; // Set to buying mode
 
-    // ?�설??검 ?�별 처리
+    // ?꾩꽕??寃 ?밸퀎 泥섎━
     if (item.special && gameState.goalLevel === 'legendary_sword') {
-        addNPCMessage("...좋아. ???�력???�정?�다. ?�설??검, ?�별??500G???�기지!");
+        addNPCMessage("...醫뗭븘. ???ㅻ젰???몄젙?쒕떎. ?꾩꽕??寃, ?밸퀎??500G???섍린吏!");
         setTimeout(() => {
             if (gameState.gold >= 500) {
                 gameState.gold -= 500;
@@ -403,9 +398,9 @@ function showNegotiationModal(itemNum) {
                 updateStats();
                 renderShopItems();
                 updateSaynoEmotion('pleased');
-                addNPCMessage("?�� 축하?�다! ?��? 진정???�인?�다. ??검?�로 ???�을 ?�라!");
+                addNPCMessage("?럦 異뺥븯?쒕떎! ?ㅺ? 吏꾩젙???곸씤?대떎. ??寃?쇰줈 ???쇱쓣 ?대씪!");
             } else {
-                addNPCMessage("...500G???�나? 그럼 ?�직 ?�러.");
+                addNPCMessage("...500G???녿굹? 洹몃읆 ?꾩쭅 ?쇰윭.");
             }
         }, 1000);
         return;
@@ -415,22 +410,20 @@ function showNegotiationModal(itemNum) {
     infoDiv.innerHTML = `
         <div style="text-align: center; margin: 15px 0;">
             <h3>${item.name}</h3>
-            <p style="color: #ffd700; font-size: 1.3em;">?��?: ${item.price}G</p>
+            <p style="color: #ffd700; font-size: 1.3em;">?뺢?: ${item.price}G</p>
             <p style="color: rgba(245, 230, 211, 0.8); font-size: 0.9em; margin-top: 10px;">${item.desc}</p>
         </div>
     `;
 
-    // ?�력�?초기??
-    const inputArea = document.getElementById('negotiation-input');
+    // ?낅젰李?珥덇린??    const inputArea = document.getElementById('negotiation-input');
     inputArea.value = '';
     document.getElementById('char-count').textContent = '0';
 
-    // 문자 카운???�벤??
-    inputArea.oninput = () => {
+    // 臾몄옄 移댁슫???대깽??    inputArea.oninput = () => {
         document.getElementById('char-count').textContent = inputArea.value.length;
     };
 
-    // ?�트 ?�시 (?�패 ?�수???�라)
+    // ?뚰듃 ?쒖떆 (?ㅽ뙣 ?잛닔???곕씪)
     const hint = getProgressiveHint();
     const hintsArea = document.getElementById('negotiation-hints');
     if (hint) {
@@ -449,7 +442,7 @@ function closeNegotiation() {
     gameState.isSelling = false;
 }
 
-// ?�로???�상 ?�출 ?�수 (?�워??기반)
+// ?덈줈???묒긽 ?쒖텧 ?⑥닔 (?ㅼ썙??湲곕컲)
 function submitNegotiation() {
     const itemNum = gameState.currentNegotiatingItem;
     if (!itemNum) return;
@@ -459,33 +452,33 @@ function submitNegotiation() {
     const isSelling = gameState.isSelling || false;
 
     if (!userInput) {
-        addNPCMessage("...말을 ?�야 ?�상???��? ?�겠??");
+        addNPCMessage("...留먯쓣 ?댁빞 ?묒긽???섏? ?딄쿋??");
         return;
     }
 
-    // ?�매 모드?????�벤?�리 ?�인
+    // ?먮ℓ 紐⑤뱶?????몃깽?좊━ ?뺤씤
     if (isSelling && (!gameState.inventory[itemNum] || gameState.inventory[itemNum] === 0)) {
-        addNPCMessage("그걸 가지�??��????�잖?? ?�기 치려�?");
+        addNPCMessage("洹멸구 媛吏怨??덉????딆옏?? ?ш린 移섎젮怨?");
         closeNegotiation();
         return;
     }
 
-    // ?�워??분석 (Advanced Negotiation Engine ?�용)
+    // ?ㅼ썙??遺꾩꽍 (Advanced Negotiation Engine ?ъ슜)
     const analysis = negotiationEngine.analyze(userInput, item, gameState);
     gameState.negotiationAttempts++;
 
-    // ?�용??메시지 ?�시
+    // ?ъ슜??硫붿떆吏 ?쒖떆
     addUserMessage(userInput);
     closeNegotiation();
 
     setTimeout(() => {
         if (analysis.success) {
-            // ?�공!
+            // ?깃났!
             gameState.negotiationSuccesses++;
             gameState.negotiationFailures = 0;
 
             if (isSelling) {
-                // ===== ?�매 모드 =====
+                // ===== ?먮ℓ 紐⑤뱶 =====
                 const basePrice = Math.floor(item.price * (gameState.baseSellPrice + gameState.sellPriceBonus / 100));
                 const bonusPercent = Math.floor(10 + analysis.persuasionScore * 20);
                 const finalPrice = Math.floor(basePrice * (1 + bonusPercent / 100));
@@ -497,7 +490,7 @@ function submitNegotiation() {
                 }
                 gameState.totalSells++;
 
-                // === ?�판 ?�득 ===
+                // === ?됲뙋 ?띾뱷 ===
                 const profit = finalPrice - basePrice;
                 const repGain = gainReputation('sell', profit, true);
 
@@ -505,24 +498,24 @@ function submitNegotiation() {
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                // 반복 경고 메시지 ?�선 ?�시
+                // 諛섎났 寃쎄퀬 硫붿떆吏 ?곗꽑 ?쒖떆
                 if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
                     addNPCMessage(analysis.repetitionCheck.message);
                     setTimeout(() => {
-                        addNPCMessage(`그래??${finalPrice}G???�주지. (+${bonusPercent}% 보너?? +${repGain} ?�판)`);
+                        addNPCMessage(`洹몃옒??${finalPrice}G???ъ＜吏. (+${bonusPercent}% 蹂대꼫?? +${repGain} ?됲뙋)`);
                     }, 1000);
                 } else {
-                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G???�주지. (+${bonusPercent}% 보너?? +${repGain} ?�판)`;
+                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} ${finalPrice}G???ъ＜吏. (+${bonusPercent}% 蹂대꼫?? +${repGain} ?됲뙋)`;
                     addNPCMessage(npcResponse);
                 }
 
-                // ?�스?�리??추�?
+                // ?덉뒪?좊━??異붽?
                 const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
                 addToNegotiationHistory(userInput, matchedKeywords, true);
 
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse: "?�매 ?�공",
+                    npcResponse: "?먮ℓ ?깃났",
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: basePrice,
@@ -538,13 +531,13 @@ function submitNegotiation() {
                 });
 
             } else {
-                // ===== 구매 모드 =====
+                // ===== 援щℓ 紐⑤뱶 =====
                 if (gameState.gold < analysis.finalPrice) {
                     updateSaynoEmotion('angry');
-                    const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 근데 ?�이 모자?�잖?? ${analysis.finalPrice}G 가?��?.`;
+                    const response = `${negotiationEngine.generateResponse(analysis, item).split('.')[0]}. 洹쇰뜲 ?덉씠 紐⑥옄?쇱옏?? ${analysis.finalPrice}G 媛?몄?.`;
                     addNPCMessage(response);
 
-                    // ?�스?�리??추�? (?�패)
+                    // ?덉뒪?좊━??異붽? (?ㅽ뙣)
                     const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
                     addToNegotiationHistory(userInput, matchedKeywords, false);
 
@@ -572,7 +565,7 @@ function submitNegotiation() {
                 gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
                 gameState.totalBuys++;
 
-                // === ?�판 ?�득 ===
+                // === ?됲뙋 ?띾뱷 ===
                 const discount = item.price - analysis.finalPrice;
                 const repGain = gainReputation('buy', discount, true);
 
@@ -580,24 +573,24 @@ function submitNegotiation() {
                 renderShopItems();
                 updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-                // 반복 경고 메시지 ?�선 ?�시
+                // 諛섎났 寃쎄퀬 硫붿떆吏 ?곗꽑 ?쒖떆
                 if (analysis.repetitionCheck && analysis.repetitionCheck.isRepetition) {
                     addNPCMessage(analysis.repetitionCheck.message);
                     setTimeout(() => {
-                        addNPCMessage(`그래??${analysis.finalPrice}G???�기지. (${analysis.discountPercent}% ?�인, +${repGain} ?�판)`);
+                        addNPCMessage(`洹몃옒??${analysis.finalPrice}G???섍린吏. (${analysis.discountPercent}% ?좎씤, +${repGain} ?됲뙋)`);
                     }, 1000);
                 } else {
-                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} (+${repGain} ?�판)`;
+                    const npcResponse = `${negotiationEngine.generateResponse(analysis, item)} (+${repGain} ?됲뙋)`;
                     addNPCMessage(npcResponse);
                 }
 
-                // ?�스?�리??추�?
+                // ?덉뒪?좊━??異붽?
                 const matchedKeywords = analysis.keywordAnalysis.matchedKeywords.map(k => k.keyword);
                 addToNegotiationHistory(userInput, matchedKeywords, true);
 
                 telemetry.logNegotiation({
                     userInput,
-                    npcResponse: "구매 ?�공",
+                    npcResponse: "援щℓ ?깃났",
                     itemId: itemNum,
                     itemName: item.name,
                     originalPrice: item.price,
@@ -615,14 +608,14 @@ function submitNegotiation() {
                 checkGoalAchievement();
             }
         } else {
-            // ?�패
+            // ?ㅽ뙣
             gameState.negotiationFailures++;
             updateSaynoEmotion('angry');
 
             const npcResponse = negotiationEngine.generateResponse(analysis, item);
             addNPCMessage(npcResponse);
 
-            // ?�레메트�?로깅
+            // ?붾젅硫뷀듃由?濡쒓퉭
             telemetry.logNegotiation({
                 userInput,
                 npcResponse,
@@ -639,7 +632,7 @@ function submitNegotiation() {
                 mode: isSelling ? 'sell' : 'buy'
             });
 
-            // ?�음 ?�상 ???�트 ?�공
+            // ?ㅼ쓬 ?묒긽 ???뚰듃 ?쒓났
             const nextHint = isSelling ?
                 getSellHint(gameState.negotiationFailures) :
                 negotiationEngine.getHint(gameState.negotiationFailures);
@@ -653,7 +646,7 @@ function submitNegotiation() {
     }, 800);
 }
 
-// ?��? 구매 (모달?�서)
+// ?뺢? 援щℓ (紐⑤떖?먯꽌)
 function buyDirectlyFromModal() {
     const itemNum = gameState.currentNegotiatingItem;
     if (!itemNum) return;
@@ -669,7 +662,7 @@ function buyDirectly(itemNum) {
     if (gameState.gold < item.price) {
         closeNegotiation();
         updateSaynoEmotion('angry');
-        addNPCMessage(`?�도 ?�으면서 무슨 구매? ${item.price}G 가?��?.`);
+        addNPCMessage(`?덈룄 ?놁쑝硫댁꽌 臾댁뒯 援щℓ? ${item.price}G 媛?몄?.`);
         return;
     }
 
@@ -682,7 +675,7 @@ function buyDirectly(itemNum) {
     closeNegotiation();
 
     updateSaynoEmotion('neutral');
-    addNPCMessage(`${item.name}, ${item.price}G?? ?��?�??�니 ??�??��??`);
+    addNPCMessage(`${item.name}, ${item.price}G?? ?뺢?濡??щ땲 ??留??놁??`);
 
     // Check level up
     checkGoalAchievement(); // Assuming checkLevelUp is actually checkGoalAchievement
@@ -691,7 +684,7 @@ function buyDirectly(itemNum) {
 function sellItem(itemNum) {
     const item = shopItems[itemNum];
     if (!item || !gameState.inventory[itemNum] || gameState.inventory[itemNum] === 0) {
-        return "그걸 가지�??��????�잖??";
+        return "洹멸구 媛吏怨??덉????딆옏??";
     }
 
     const sellPrice = Math.floor(item.price * 0.7);
@@ -708,12 +701,12 @@ function sellItem(itemNum) {
     checkGoalAchievement();
 
     updateSaynoEmotion('neutral');
-    return `${item.name}? ${sellPrice}G???�주지. ?�쁘지 ?��? 거래??`;
+    return `${item.name}? ${sellPrice}G???ъ＜吏. ?섏걯吏 ?딆? 嫄곕옒??`;
 }
 
 function findItemNumber(message) {
     for (const num of Object.keys(shopItems)) {
-        if (message.includes(num + '�?) || message.includes(num)) {
+        if (message.includes(num + '踰?) || message.includes(num)) {
             return num;
         }
     }
@@ -725,30 +718,35 @@ function getRandomFrom(array) {
 }
 
 function updateStats() {
-    document.getElementById('gold').textContent = gameState.gold;
-    // Removed: total-buys element does not exist
-    // Removed: total-sells element does not exist
-
-    // ?�판 ?�보 ?�시
-    const repInfo = getReputationInfo();
-    const goalDisplay = document.getElementById('goal-text');
-
-    if (repInfo.isMaxLevel) {
-        goalDisplay.innerHTML = `
-            <strong>?�판:</strong> ${repInfo.name} (최�? ?�벨)<br>
-            <strong>?�판 ?�수:</strong> ${repInfo.current}
-        `;
-    } else {
-        goalDisplay.innerHTML = `
-            <strong>?�판:</strong> ${repInfo.name} (Lv.${repInfo.level})<br>
-            <strong>진행??</strong> ${repInfo.current}/${repInfo.required} (${repInfo.progress}%)<br>
-            <strong>?�음 ?�벨:</strong> ${repInfo.nextName}
-        `;
+    const goldEl = document.getElementById('gold');
+    if (goldEl) goldEl.textContent = gameState.gold;
+    
+    const itemCountEl = document.getElementById('item-count');
+    if (itemCountEl) {
+        const itemCount = Object.values(gameState.inventory).reduce((sum, count) => sum + count, 0);
+        itemCountEl.textContent = itemCount;
     }
-
-    // 기존 목표 ?�보 (?�설??검)
-    if (gameState.goalLevel === 'legendary_sword') {
-        goalDisplay.innerHTML += `<br><strong>최종 목표:</strong> ?�설??검 구매 (2000G)`;
+    
+    const repInfo = getReputationInfo();
+    const goalTitleEl = document.getElementById('goal-title');
+    if (goalTitleEl) goalTitleEl.textContent = repInfo.name + ' (Lv.' + repInfo.level + ')';
+    
+    const goalTextEl = document.getElementById('goal-text');
+    if (goalTextEl) {
+        if (repInfo.isMaxLevel) {
+            goalTextEl.textContent = '평판: ' + repInfo.current + ' (최대 레벨)';
+        } else {
+            goalTextEl.textContent = '평판: ' + repInfo.current + '/' + repInfo.required + ' (' + repInfo.progress + '%)';
+        }
+    }
+    
+    const goalProgressEl = document.getElementById('goal-progress');
+    if (goalProgressEl) {
+        if (!repInfo.isMaxLevel) {
+            goalProgressEl.style.width = repInfo.progress + '%';
+        } else {
+            goalProgressEl.style.width = '100%';
+        }
     }
 }
 
@@ -758,17 +756,17 @@ function checkGoalAchievement() {
     if (gameState.gold >= currentGoal.gold) {
         updateSaynoEmotion('pleased');
         const message = mockResponses.goalAchieved[gameState.goalLevel];
-        addNPCMessage("?�� " + message);
+        addNPCMessage("?럦 " + message);
 
         if (gameState.goalLevel === 'beginner') {
             gameState.goalLevel = 'intermediate';
             setTimeout(() => {
-                addNPCMessage("?�음 목표: " + goals.intermediate.title + " (" + goals.intermediate.gold + "G)");
+                addNPCMessage("?ㅼ쓬 紐⑺몴: " + goals.intermediate.title + " (" + goals.intermediate.gold + "G)");
             }, 1000);
         } else if (gameState.goalLevel === 'intermediate') {
             gameState.goalLevel = 'legendary_sword';
             setTimeout(() => {
-                addNPCMessage("최종 목표까�? ?�군. ?�제... ?�설??검??500G???�아주�?!");
+                addNPCMessage("理쒖쥌 紐⑺몴源뚯? ?붽뎔. ?댁젣... ?꾩꽕??寃??500G???붿븘二쇱?!");
             }, 1000);
         }
 
@@ -792,7 +790,7 @@ function addNPCMessage(text) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message npc';
     messageDiv.innerHTML = `
-        <div class="message-sender">?�이??/div>
+        <div class="message-sender">?몄씠??/div>
         <div class="message-text">${text}</div>
     `;
     chatMessages.appendChild(messageDiv);
@@ -819,12 +817,12 @@ function renderShopItems() {
         const sellPrice = Math.floor(item.price * gameState.baseSellPrice);
 
         itemDiv.innerHTML = `
-            <div class="item-name">${item.name}${item.special ? ' �? : ''}</div>
+            <div class="item-name">${item.name}${item.special ? ' 狩? : ''}</div>
             <div class="item-price">${item.price}G</div>
             <div class="item-desc">${item.desc}</div>
             <div class="item-actions">
-                <button class="buy-btn" onclick="showNegotiationModal('${num}')">구매</button>
-                <button class="sell-btn" onclick="showSellNegotiationModal('${num}')" ${!hasItem ? 'disabled' : ''}>?�매</button>
+                <button class="buy-btn" onclick="showNegotiationModal('${num}')">援щℓ</button>
+                <button class="sell-btn" onclick="showSellNegotiationModal('${num}')" ${!hasItem ? 'disabled' : ''}>?먮ℓ</button>
             </div>
         `;
         shopGrid.appendChild(itemDiv);
@@ -834,7 +832,7 @@ function renderShopItems() {
 function renderInventory() {
     inventoryGrid.innerHTML = '';
     if (Object.keys(gameState.inventory).length === 0 || Object.values(gameState.inventory).every(count => count === 0)) {
-        inventoryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.7;">?�벤?�리가 비어?�습?�다</p>';
+        inventoryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.7;">?몃깽?좊━媛 鍮꾩뼱?덉뒿?덈떎</p>';
     } else {
         for (const [num, count] of Object.entries(gameState.inventory)) {
             if (count > 0) {
@@ -843,11 +841,11 @@ function renderInventory() {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'inventory-item';
                 itemDiv.innerHTML = `
-                    <div class="item-name">${item.name}${item.special ? ' �? : ''}</div>
-                    <div class="item-count">보유: ${count}�?/div>
-                    <div class="item-price">?�매가: ${sellPrice}G</div>
+                    <div class="item-name">${item.name}${item.special ? ' 狩? : ''}</div>
+                    <div class="item-count">蹂댁쑀: ${count}媛?/div>
+                    <div class="item-price">?먮ℓ媛: ${sellPrice}G</div>
                     <div class="item-actions">
-                        <button class="sell-btn" onclick="showSellNegotiationModal('${num}')">?�매</button>
+                        <button class="sell-btn" onclick="showSellNegotiationModal('${num}')">?먮ℓ</button>
                     </div>
                 `;
                 inventoryGrid.appendChild(itemDiv);

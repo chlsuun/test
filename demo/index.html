@@ -104,12 +104,36 @@
     <!-- Negotiation Modal -->
     <div id="negotiation-modal" class="modal">
         <div class="modal-content negotiation-modal">
-            <h2>가격 협상</h2>
+            <h2>💬 가격 협상</h2>
             <div id="negotiation-item-info"></div>
-            <div class="persuasion-choices">
-                <!-- Choices will be dynamically added -->
+
+            <div class="negotiation-input-section">
+                <label for="negotiation-input" class="input-label">
+                    세이노를 어떻게 설득하시겠습니까?
+                </label>
+                <textarea id="negotiation-input" class="negotiation-textarea"
+                    placeholder="자유롭게 입력하세요... (예: 푼돈을 아끼는게 큰돈 버는 길 아니었습니까?)" maxlength="200" rows="3"></textarea>
+                <div class="char-count">
+                    <span id="char-count">0</span> / 200
+                </div>
             </div>
-            <button class="modal-close" onclick="closeNegotiation()">취소</button>
+
+            <div id="negotiation-hints" class="hints-area" style="display: none;">
+                <span class="hint-icon">💡</span>
+                <span id="hint-text"></span>
+            </div>
+
+            <div class="modal-actions">
+                <button class="negotiate-submit-btn" onclick="submitNegotiation()">
+                    🗣️ 협상 시도
+                </button>
+                <button class="direct-buy-btn" onclick="buyDirectlyFromModal()">
+                    💰 정가로 구매
+                </button>
+                <button class="modal-close" onclick="closeNegotiation()">
+                    취소
+                </button>
+            </div>
         </div>
     </div>
 
@@ -136,6 +160,7 @@
         </div>
     </div>
 
+    <script src="negotiation-engine.js"></script>
     <script src="augmentations.js"></script>
     <script src="sellNegotiation.js"></script>
     <script src="levelup-functions.js"></script>

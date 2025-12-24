@@ -412,32 +412,25 @@ function showNegotiationModal(itemNum) {
         </div>
     `;
 
-    // 구매 협상 선택지 표시
-    const choicesDiv = document.querySelector('.persuasion-choices');
-    choicesDiv.innerHTML = `
-        <button class="choice-btn polite" onclick="negotiate('polite')">
-            <span class="choice-icon">🙏</span>
-            <span class="choice-title">"부탁드립니다..."</span>
-            <span class="choice-desc">예의바르게 (성공률: ${15 + gameState.buyNegotiationBonus}%)</span>
-        </button>
-        <button class="choice-btn logical" onclick="negotiate('logical')">
-            <span class="choice-icon">🧠</span>
-            <span class="choice-title">"다른 곳은 더 싸던데요"</span>
-            <span class="choice-desc">논리적으로 (성공률: ${25 + gameState.buyNegotiationBonus}%)</span>
-        </button>
-        <button class="choice-btn wisdom" onclick="negotiate('wisdom')">
-            <span class="choice-icon">📖</span>
-            <span class="choice-title">"세이노님 가르침이..."</span>
-            <span class="choice-desc">가르침 인용 (성공률: ${35 + gameState.buyNegotiationBonus}%)</span>
-        </button>
-        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(212, 165, 116, 0.3);">
-            <button class="choice-btn" onclick="buyDirectly('${itemNum}')" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1)); border-color: rgba(76, 175, 80, 0.5);">
-                <span class="choice-icon">💰</span>
-                <span class="choice-title">정가로 바로 구매</span>
-                <span class="choice-desc">협상 없이 ${item.price}G에 구매</span>
-            </button>
-        </div>
-    `;
+    // 입력창 초기화
+    const inputArea = document.getElementById('negotiation-input');
+    inputArea.value = '';
+    document.getElementById('char-count').textContent = '0';
+
+    // 문자 카운터 이벤트
+    inputArea.oninput = () => {
+        document.getElementById('char-count').textContent = inputArea.value.length;
+    };
+
+    // 힌트 표시 (실패 횟수에 따라)
+    const hint = getProgressiveHint();
+    const hintsArea = document.getElementById('negotiation-hints');
+    if (hint) {
+        document.getElementById('hint-text').textContent = hint;
+        hintsArea.style.display = 'block';
+    } else {
+        hintsArea.style.display = 'none';
+    }
 
     negotiationModal.style.display = 'flex';
 }
@@ -445,58 +438,85 @@ function showNegotiationModal(itemNum) {
 function closeNegotiation() {
     negotiationModal.style.display = 'none';
     gameState.currentNegotiatingItem = null;
+    gameState.isSelling = false;
 }
 
-function negotiate(strategy) {
+// 새로운 협상 제출 함수 (키워드 기반)
+function submitNegotiation() {
     const itemNum = gameState.currentNegotiatingItem;
     if (!itemNum) return;
 
     const item = shopItems[itemNum];
+    const userInput = document.getElementById('negotiation-input').value.trim();
+
+    if (!userInput) {
+        addNPCMessage("...말을 해야 협상이 되지 않겠나?");
+        return;
+    }
+
+    // 키워드 분석
+    const analysis = analyzeNegotiation(userInput);
     gameState.negotiationAttempts++;
 
-    const strategies = {
-        polite: { base: 15, message: "정말 필요합니다. 부탁드립니다..." },
-        logical: { base: 25, message: "다른 곳은 더 싸던데요. 이 가격이면 손해 아닙니까?" },
-        wisdom: { base: 35, message: "푼돈을 아끼는게 큰돈 버는 길 아니었습니까? 세이노님 가르침이..." }
-    };
+    // 성공 판정 (점수 기반 + 보너스)
+    const baseSuccessRate = analysis.score;
+    const bonusRate = gameState.buyNegotiationBonus;
+    const finalRate = Math.min(95, baseSuccessRate + bonusRate);
+    const success = Math.random() * 100 < finalRate;
 
-    const chosen = strategies[strategy];
-    const success = Math.random() * 100 < chosen.base;
-
-    addUserMessage(chosen.message);
+    // 사용자 메시지 표시
+    addUserMessage(userInput);
     closeNegotiation();
 
     setTimeout(() => {
         if (success) {
-            const discountPercent = 10 + Math.floor(Math.random() * 21);
-            const discountedPrice = Math.floor(item.price * (1 - discountPercent / 100));
-
+            // 성공!
             gameState.negotiationSuccesses++;
+            gameState.negotiationFailures = 0; // 성공 시 실패 카운터 리셋
+
+            const discountPercent = 10 + Math.floor(Math.random() * 21); // 10-30%
+            const discountedPrice = Math.floor(item.price * (1 - discountPercent / 100));
 
             if (gameState.gold < discountedPrice) {
                 updateSaynoEmotion('angry');
-                addNPCMessage(`...좋아. ${discountedPrice}G에 넘긴다. 근데 돈이 모자라잖아!`);
+                addNPCMessage(`${generateNegotiationResponse(analysis, item, true)} ${discountedPrice}G에 넘긴다. 근데 돈이 모자라잖아!`);
                 return;
             }
 
             gameState.gold -= discountedPrice;
             gameState.inventory[itemNum] = (gameState.inventory[itemNum] || 0) + 1;
             gameState.totalBuys++;
-            gameState.totalProfit += (item.price - discountedPrice);
 
             updateStats();
             renderShopItems();
-            checkGoalAchievement();
+            updateSaynoEmotion(gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral');
 
-            updateSaynoEmotion('pleased');
-            const emotion = gameState.negotiationSuccesses > 5 ? 'pleased' : 'neutral';
-            const response = getRandomFrom(mockResponses.negotiationSuccess[emotion]).replace('{}', discountedPrice);
-            addNPCMessage(response + ` (${discountPercent}% 할인)`);
+            addNPCMessage(`${generateNegotiationResponse(analysis, item, true)} ${discountedPrice}G에 넘기지. (${discountPercent}% 할인)`);
+            checkGoalAchievement();
         } else {
+            // 실패
+            gameState.negotiationFailures++;
             updateSaynoEmotion('angry');
-            addNPCMessage(mockResponses.negotiationFail.angry[Math.floor(Math.random() * mockResponses.negotiationFail.angry.length)]);
+            addNPCMessage(generateNegotiationResponse(analysis, item, false));
+
+            // 다음 협상 시 힌트 제공
+            const nextHint = getProgressiveHint();
+            if (nextHint) {
+                setTimeout(() => {
+                    addNPCMessage(nextHint);
+                }, 1500);
+            }
         }
-    }, 1000);
+    }, 800);
+}
+
+// 정가 구매 (모달에서)
+function buyDirectlyFromModal() {
+    const itemNum = gameState.currentNegotiatingItem;
+    if (!itemNum) return;
+
+    buyDirectly(itemNum);
+    closeNegotiation();
 }
 
 // Direct purchase without negotiation

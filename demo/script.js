@@ -8,17 +8,19 @@ const gameState = {
     totalSells: 0,
     negotiationAttempts: 0,
     negotiationSuccesses: 0,
+    negotiationFailures: 0,  // 협상 실패 횟수 (힌트용)
     totalProfit: 0,
     currentNegotiatingItem: null,
     saynoEmotion: 'neutral',
+    isSelling: false,
     // 증강 시스템
     augmentations: [],
-    sellNegotiationBonus: 0,  // 판매 협상 성공률 보너스
-    buyNegotiationBonus: 0,   // 구매 협상 성공률 보너스
-    sellPriceBonus: 0,        // 판매 가격 보너스 %
-    buyDiscountBonus: 0,      // 구매 할인 보너스 %
-    baseSellPrice: 0.70,      // 기본 판매 가격 (70%)
-    negotiationPenaltyTurns: 0, // 협상 패널티 남은 턴
+    sellNegotiationBonus: 0,
+    buyNegotiationBonus: 0,
+    sellPriceBonus: 0,
+    buyDiscountBonus: 0,
+    baseSellPrice: 0.70,
+    negotiationPenaltyTurns: 0,
     leveledUp: false
 };
 

@@ -46,18 +46,11 @@ function showAugmentationModal(message) {
             card.classList.add(aug.good ? 'good' : 'bad');
         }
 
-        const icons = {
-            personality: '😊',
-            gold: '💰',
-            trading: '📈',
-            random: '🎲'
-        };
-
         card.innerHTML = `
-            <div class="aug-icon">${icons[aug.category]}</div>
+            <div class="aug-icon">${aug.icon || '❓'}</div>
             <div class="aug-name">${aug.name}</div>
-            <div class="aug-desc">${aug.desc}</div>
-            <div class="aug-category">${aug.category}</div>
+            <div class="aug-effect">${aug.desc}</div>
+            <div class="aug-detailed-desc">${aug.detailedDesc || aug.desc}</div>
         `;
 
         card.onclick = () => selectAugmentation(aug);

@@ -1,143 +1,191 @@
-# AI Gaming Agent Portfolio
+# Sayno's Shop - AI Gaming Agent Demo
 
-**Live Demo Sites**:
-- 🎮 **[Interactive Chat Demo](https://chlsuun.github.io/test/demo/)** ⭐ NEW! - 브라우저에서 바로 체험
-- 📊 **[Project Presentation](https://chlsuun.github.io/test/)** - 프로젝트 소개
+세이노의 가르침을 기반으로 한 인터랙티브 상점 시뮬레이션 게임
 
-Unity 엔진과 최신 LLM(Large Language Model) 기술을 결합하여, 플레이어와 고도로 상호작용하는 "Intelligent Gaming Agent"를 구현한 테크 데모 프로젝트입니다.
+## 🎮 프로젝트 소개
 
-## 📌 프로젝트 개요
-단순히 정해진 대사를 읊는 NPC가 아닌, **페르소나**, **외부 데이터**, **논리적 추론** 능력을 갖춘 에이전트를 통해 게임의 몰입도를 극대화하는 것을 목표로 합니다.
+"세이노의 상점"은 AI 기반 NPC와의 협상을 통해 아이템을 거래하는 웹 기반 게임입니다. 
+플레이어는 세이노의 가르침을 활용하여 더 나은 가격으로 협상하고, 목표를 달성해 나갑니다.
 
-## 🚀 핵심 기능 (Key Features)
+## ⚖️ 저작권 및 출처
 
-### 1. "세이노의 가르침" 페르소나 NPC
-- **기능**: 독설적이고 확고한 가치관을 지닌 상점 주인 NPC와 협상 및 대화
-- **기술**: OpenAI / Google Gemini API 연동, System Prompt Engineering을 통한 페르소나 주입
-- **UX**: 플레이어의 가격 흥정에 대해 NPC가 자신의 철학("협상을 구걸로 착각하지 마라")에 따라 반응
-- **Demo**: Mock AI로 API 없이도 작동, 구매/판매/인벤토리 시스템 완비
+**중요:** 본 프로젝트는 **비상업적 포트폴리오 목적**으로 제작되었습니다.
 
-### 2. LLM 기반 실시간 경제 시뮬레이션
-- **기능**: 실제 경제 뉴스를 분석하여 게임 내 가상 자산의 시세를 변동시킴
-- **기술**: Python 크롤러, 감성 분석(Sentiment Analysis), Unity-Python 데이터 연동
-- **UX**: "지금 나스닥이 하락세라 포션 가격이 올랐네?" - 현실 데이터 기반의 살아있는 경제 시스템
+### 원본 자료
+- **서적:** "세이노의 가르침"
+- **저자:** 세이노
+- **출처:** 세이노 정식 카페
+- **사용 범위:** NPC 캐릭터 페르소나 형성, 키워드 데이터베이스 구축
 
-### 3. "거짓말 탐지기" 추리 에이전트
-- **기능**: 범인의 알리바이와 증거를 토대로 진실을 밝혀내는 추리 게임
-- **기술**: RAG(검색 증강 생성)를 활용한 지식 제한, Deception Prompting(거짓말 유도)
-- **UX**: 교묘하게 거짓말하는 AI를 논리로 제압하는 추리 경험
+### 사용 목적
+- ✅ 개인 포트폴리오 전시
+- ✅ 기술 역량 시연
+- ✅ 교육 및 학습 목적
+- ❌ 상업적 이용 금지
 
-## 🛠 기술 스택 (Tech Stack)
-- **Game Engine**: Unity 6 (C#)
-- **AI Model**: OpenAI GPT-4 / Google Gemini 1.5 / Mock AI
-- **Backend**: Python (Flask)
-- **Data Processing**: BeautifulSoup, Pandas, Scikit-learn
-- **Version Control**: Git / GitHub
+**상세 내용:** [COPYRIGHT_ATTRIBUTION.md](COPYRIGHT_ATTRIBUTION.md) 참조
 
-## 📂 폴더 구조
+## 🚀 주요 기능
+
+### 1. 키워드 기반 협상 시스템
+- 자유 텍스트 입력으로 세이노 설득
+- 퍼지 매칭 (오타 허용)
+- 한글 조사 자동 제거
+- 동의어 지원
+
+### 2. 엔터프라이즈급 텔레메트리
+- JSONL 포맷 로깅 (LLM 학습 준비)
+- 세션 추적
+- 다운로드 가능한 학습 데이터
+- 전략 패턴 기반 저장소 추상화
+
+### 3. 증강 시스템
+- 레벨업 시 능력 선택
+- 협상 성공률 증가
+- 특수 효과 및 보너스
+
+### 4. 동적 UI
+- 캐릭터 초상화 항상 표시
+- 독립 스크롤 채팅 영역
+- 반응형 그리드 레이아웃
+
+## 🛠️ 기술 스택
+
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Architecture:** Strategy Pattern, Facade Pattern
+- **AI/ML:** Keyword Matching, Fuzzy Logic, Levenshtein Distance
+- **Data:** JSONL (JSON Lines) for LLM training
+- **Deployment:** GitHub Pages
+
+## 📦 프로젝트 구조
+
 ```
-/
-├── UnityProject/      # Unity 게임 클라이언트 프로젝트 (예정)
-├── PythonTools/       # 데이터 크롤링, 분석 및 백엔드 서버
-│   ├── venv/          # Python 가상환경
-│   ├── console_demo.py # 통합 콘솔 데모
-│   ├── prompts/       # AI 시스템 프롬프트
-│   ├── data/          # NPC 데이터
-│   ├── economy/       # 경제 시뮬레이션 모듈
-│   ├── detective/     # 추리 게임 모듈
-│   └── requirements.txt
-├── index.html         # 프로젝트 프레젠테이션
-├── presentation.md    # Marp 프레젠테이션 원본
-├── README.md          # 프로젝트 설명서
-└── .gitignore         # Git 설정
+demo/
+├── index.html                      # 메인 페이지
+├── style.css                       # 스타일시트
+├── script.js                       # 메인 로직
+├── telemetry/                      # 텔레메트리 시스템
+│   ├── loggers/
+│   │   ├── IDataLogger.js
+│   │   ├── LocalStorageLogger.js
+│   │   └── APILogger.js
+│   ├── SessionManager.js
+│   └── TelemetryManager.js
+├── negotiation/                    # 협상 엔진
+│   ├── KeywordMatcher.js
+│   └── NegotiationEngine.js
+├── config/
+│   └── keywords-config.js          # 키워드 데이터베이스
+└── augmentations.js                # 증강 시스템
 ```
 
-## 🏁 시작하기 (Getting Started)
+## 🎯 게임 플레이
 
-### 1. Repository Clone
+1. **협상:** 세이노를 설득하여 가격 할인 받기
+2. **거래:** 아이템 구매 및 판매
+3. **레벨업:** 목표 달성 시 증강 선택
+4. **전략:** 세이노의 가르침을 활용한 협상
+
+## 🔑 키워드 시스템
+
+### 긍정 키워드
+- **지혜 (30%):** 푼돈, 투자, 가르침, 큰돈
+- **논리 (20%):** 비싸, 다른곳, 시세
+- **진정성 (15%):** 정말, 진심, 꼭
+- **예의 (10%):** 부탁, 제발, 감사
+
+### 부정 키워드
+- **아부 (-20%):** 멋지, 훌륭, 최고
+- **위협 (-30%):** 안사, 쓰레기, 최악
+
+## 📊 텔레메트리 기능
+
+### 데이터 수집
+```javascript
+// 텔레메트리 통계 확인
+console.log(telemetry.getStats());
+
+// 학습 데이터 다운로드
+telemetry.downloadLogs('training_data.jsonl');
+```
+
+### JSONL 포맷
+```json
+{
+  "session_id": "sess_...",
+  "timestamp": 1703404800000,
+  "prompt": "사용자 입력",
+  "completion": "NPC 응답",
+  "metadata": {
+    "persuasion_score": 0.75,
+    "matched_keywords": ["푼돈", "투자"],
+    "success": true
+  }
+}
+```
+
+## 🚀 시작하기
+
+### 로컬 실행
 ```bash
+# 저장소 클론
 git clone https://github.com/chlsuun/test.git
-cd test
+
+# 디렉토리 이동
+cd test/demo
+
+# 로컬 서버 실행 (Python)
+python -m http.server 8000
+
+# 브라우저에서 열기
+# http://localhost:8000
 ```
 
-### 2. Python 환경 설정
-```bash
-cd PythonTools
-python -m venv venv
-.\venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-```
+### 온라인 데모
+https://chlsuun.github.io/test/demo/
 
-### 3. Console Demo 실행
-```bash
-.\venv\Scripts\python console_demo.py
-```
+## 📚 문서
 
-**메뉴:**
-1. Talk to Sayno (세이노 NPC와 대화)
-2. Market Simulation (경제 시뮬레이션)
-3. Solve the Crime (추리 게임)
+- [COPYRIGHT_ATTRIBUTION.md](COPYRIGHT_ATTRIBUTION.md) - 저작권 및 출처
+- [INTEGRATION_GUIDE.js](demo/INTEGRATION_GUIDE.js) - 통합 가이드
+- [Walkthrough](https://github.com/chlsuun/test/wiki) - 구현 상세
 
-## 🎯 특징
+## 🎓 교육적 목적
 
-### Mock AI 우선 설계
-- API 키 없이도 모든 기능 체험 가능
-- 개발/테스트 환경에서 비용 zero
-- 프로토타이핑에 최적화
+본 프로젝트는 다음 기술을 시연합니다:
 
-### 멀티 백엔드 지원
-```python
-if HAS_GEMINI:
-    use_gemini()      # Google Gemini API
-elif HAS_OPENAI:
-    use_openai()      # OpenAI GPT
-else:
-    use_mock()        # Mock AI (항상 작동!)
-```
+- **디자인 패턴:** Strategy, Facade
+- **AI/ML:** Fuzzy Matching, Keyword Analysis
+- **데이터 엔지니어링:** JSONL, ETL Pipeline
+- **아키텍처:** Modular, Scalable Design
+- **UX/UI:** Responsive, Interactive Design
 
-### 보안
-- `.env` 파일로 API 키 관리
-- `.gitignore`로 민감 정보 보호
-- API 키 없이도 완전한 기능 제공
+## 🤝 기여
 
-## 📖 문서
-- [Demo Guide](PythonTools/DEMO_GUIDE.md) - 상세 사용 가이드
-- [Gemini Setup](PythonTools/GEMINI_SETUP.md) - Gemini API 설정
-- [Presentation](https://chlsuun.github.io/test/) - 프로젝트 소개
+본 프로젝트는 포트폴리오 목적으로 제작되었으나, 
+교육적 목적의 기여는 환영합니다.
 
-## 📝 개발 현황
+## 📄 라이선스
 
-### ✅ 완료
-- [x] Python 백엔드 (3개 Phase 모두)
-- [x] Mock/Gemini/OpenAI 멀티 AI 백엔드
-- [x] 세이노 상점 시스템 (구매/판매/인벤토리)
-- [x] 경제 뉴스 감성 분석 (Mock)
-- [x] 추리 게임 증거 시스템 (Mock)
-- [x] 통합 Console Demo
-- [x] 프로젝트 문서화
-- [x] GitHub Pages 배포
+본 프로젝트의 코드는 MIT 라이선스 하에 공개됩니다.
 
-### 🚧 진행 예정
-- [ ] Unity 프로젝트 구현
-- [ ] Unity-Python 통신
-- [ ] 3D UI 구현
-- [ ] 실제 뉴스 크롤링
-- [ ] Vector DB RAG 구현
+**단, "세이노의 가르침" 관련 콘텐츠는:**
+- 원저작자 세이노의 저작권 보호를 받습니다
+- 비상업적 교육 목적으로만 사용됩니다
+- 상업적 이용이 금지됩니다
 
-## 🎓 학습 포인트
-1. **LLM API 통합**: OpenAI, Gemini API 활용
-2. **Prompt Engineering**: System Prompt로 페르소나 주입
-3. **RAG**: 검색 증강 생성 구현
-4. **Sentiment Analysis**: 감성 분석 활용
-5. **Mock-First Design**: API 의존성 제거
+## 📧 연락처
 
-## 📫 Contact
-- GitHub: [@chlsuun](https://github.com/chlsuun)
-- Repository: [https://github.com/chlsuun/test](https://github.com/chlsuun/test)
+- **GitHub:** https://github.com/chlsuun
+- **프로젝트:** https://github.com/chlsuun/test
 
-## 📄 License
-MIT License
+## 🙏 감사의 말
+
+- **세이노:** "세이노의 가르침" 원저작자
+- **세이노 정식 카페:** 자료 제공
 
 ---
 
-Made with ❤️ by chlsuun
+**면책 조항:**  
+본 프로젝트는 교육 및 포트폴리오 목적의 비상업적 프로젝트입니다.  
+"세이노의 가르침"의 모든 권리는 원저작자에게 있습니다.

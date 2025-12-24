@@ -1,65 +1,71 @@
 /**
  * Keyword Configuration
  * 
- * Centralized keyword database with synonyms and weights
- * Easy to extend and maintain
+ * Based on Sayno's Persona (세이노의 가르침)
+ * Ruthless pragmatist merchant and harsh mentor
  */
 
 const KeywordConfig = {
-    // Positive keyword categories
+    // Positive keyword categories (세이노가 좋아하는 말)
     positive: {
         wisdom: {
-            keywords: ["푼돈", "투자", "가르침", "세이노", "큰돈", "아끼", "절약", "부자", "저축"],
-            synonyms: ["모으다", "저금", "재테크", "돈관리"],
-            weight: 0.30,
-            description: "세이노의 가르침 관련"
+            keywords: ["본질", "대가", "피", "근거", "투자", "가르침", "공부", "실력"],
+            synonyms: ["핵심", "증거", "노력", "학습", "능력"],
+            weight: 0.35,
+            description: "세이노의 가르침 (본질, 대가, 피보다 진하게)"
         },
         logical: {
-            keywords: ["비싸", "다른곳", "다른 곳", "손해", "가격", "시세", "비교", "저렴", "싸"],
-            synonyms: ["고가", "값비싸", "저렴한곳", "할인"],
-            weight: 0.20,
+            keywords: ["왜냐하면", "이유", "가치", "역사적", "실용적", "근거", "비교"],
+            synonyms: ["논리", "분석", "타당성"],
+            weight: 0.25,
             description: "논리적 근거"
         },
-        emotional: {
-            keywords: ["필요", "간절", "진심", "꼭", "정말"],
-            synonyms: ["절실", "반드시", "진짜"],
-            weight: 0.15,
-            description: "진정성"
+        effort: {
+            keywords: ["노력", "공부", "배움", "성장", "발전", "실천"],
+            synonyms: ["수련", "훈련", "연습"],
+            weight: 0.20,
+            description: "노력과 성장"
         },
-        polite: {
-            keywords: ["부탁", "제발", "도와주세요", "감사", "부탁드립니다"],
-            synonyms: ["부탁해요", "도와주세요"],
-            weight: 0.10,
-            description: "예의"
+        value: {
+            keywords: ["가치", "품질", "효용", "쓸모"],
+            synonyms: ["유용성", "실용성"],
+            weight: 0.15,
+            description: "가치 인식"
         }
     },
 
-    // Negative keyword categories
+    // Negative keyword categories (세이노가 혐오하는 말)
     negative: {
+        laziness: {
+            keywords: ["운", "운이", "쉽게", "대충", "힐링", "편하게"],
+            synonyms: ["간편", "수월", "편안"],
+            penalty: -0.35,
+            description: "게으름과 운 타령 (세이노 최대 혐오)"
+        },
+        begging: {
+            keywords: ["제발", "부탁", "좀", "싸게", "깎아", "공짜", "무료"],
+            synonyms: ["거저", "공짜로"],
+            penalty: -0.25,
+            description: "거지 근성"
+        },
         flattery: {
-            keywords: ["멋지", "훌륭", "대단", "최고", "존경", "짱", "굿"],
-            synonyms: ["좋아요", "완벽"],
-            penalty: -0.20,
-            description: "아부 (역효과)"
+            keywords: ["멋지", "훌륭", "대단", "최고", "존경", "짱"],
+            synonyms: ["좋아요", "완벽", "굿"],
+            penalty: -0.30,
+            description: "아부 (개소리)"
         },
         threat: {
-            keywords: ["안사", "안살", "별로", "쓰레기", "최악", "안좋"],
+            keywords: ["안사", "안살", "별로", "쓰레기", "최악"],
             synonyms: ["구려", "형편없"],
-            penalty: -0.30,
-            description: "위협"
-        },
-        rude: {
-            keywords: ["비싸기만", "바가지", "사기", "속이"],
-            synonyms: ["사기꾼", "도둑"],
-            penalty: -0.15,
-            description: "무례"
+            penalty: -0.40,
+            description: "위협과 무례"
         }
     },
 
     // Fuzzy matching configuration
     fuzzy: {
         enabled: true,
-        threshold: 0.8, // Levenshtein similarity threshold
-        maxDistance: 2  // Maximum edit distance
+        threshold: 0.8,
+        maxDistance: 2
     }
 };
